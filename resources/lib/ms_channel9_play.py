@@ -46,8 +46,20 @@ class Main:
         self.video_format      = __settings__.getSetting ("video_format")
         self.pref_video_format = ("Medium Quality WMV", 
                                   "MP4", 
+                                  "Low Quality MP4",
+                                  "Mid Quality MP4",
+                                  "High Quality MP4",
                                   "High Quality WMV") [int(self.video_format)]
-        
+        self.video_formats = ("High Quality MP4",
+                              "High Quality WMV",
+                               "Mid Quality MP4"
+                               "Medium Quality MP4"
+                               "Medium Quality WMV",
+                               "Mid Quality WMV",
+                               "Low Quality MP4",
+                               "Low Quality WMV",
+                               "MP4"
+                               "MP3")
         #
         # Play video...
         #
@@ -134,21 +146,22 @@ class Main:
         for li_entry in li_entries :
             li_entry_a = li_entry.find( "a" )
             if li_entry_a != None :
-                if li_entry_a.string == self.pref_video_format :
-                    video_url = li_entry_a[ "href" ]
-                    break
+                for quality in self.video_formats :
+                  if li_entry_a.string == quality :
+                      video_url = li_entry_a[ "href" ]
+                      break
 
         # No preferred format found, pick any available...
-        if video_url == None :
-            for li_entry in li_entries :
-                li_entry_a = li_entry.find( "a" )
-                if li_entry_a != None :
-                    format = li_entry_a.string
-                    if format == __settings__.getLocalizedString(30303) or \
-                       format == __settings__.getLocalizedString(30302) or \
-                       format == __settings__.getLocalizedString(30301) :
-                        video_url = li_entry_a[ "href" ]
-                        break
+        #if video_url == None :
+        #    for li_entry in li_entries :
+        #        li_entry_a = li_entry.find( "a" )
+        #        if li_entry_a != None :
+        #            format = li_entry_a.string
+        #            if format == __settings__.getLocalizedString(30303) or \
+        #               format == __settings__.getLocalizedString(30302) or \
+        #               format == __settings__.getLocalizedString(30301) :
+        #                video_url = li_entry_a[ "href" ]
+        #                break
 
         #
         # Return value

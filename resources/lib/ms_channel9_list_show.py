@@ -55,7 +55,7 @@ class Main:
         #
         # Init
         #
-                
+        sysaddon = sys.argv[0]
         #
         # Get HTML page...
         #
@@ -97,15 +97,18 @@ class Main:
             plot            = div_description.string
             
             # Add to list...
-            listitem        = xbmcgui.ListItem( title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail )
-            listitem.setInfo( "video", { "Title" : title, "Studio" : "Microsoft Channel 9", "Plot" : plot, "Genre" : genre } )
-            plugin_play_url = '%s?action=play&video_page_url=%s' % ( sys.argv[ 0 ], urllib.quote_plus( video_page_url ) )
-            xbmcplugin.addDirectoryItem( handle=int(sys.argv[ 1 ]), url=plugin_play_url, listitem=listitem, isFolder=False)
+            #cm = []
+            #cm.append(xbmcplugin.lang(30239).encode('utf-8'), 'RunPlugin(%s?action=tvshowToLibrary&tvshowtitle=%s)' % (sysaddon, title))
+
+            listitem = xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
+            listitem.setInfo("video", {"Title": title, "Studio": "Microsoft Channel 9", "Plot": plot, "Genre": genre})
+            plugin_play_url = '%s?action=play&video_page_url=%s' % (sys.argv[0], urllib.quote_plus(video_page_url))
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=listitem, isFolder=False)
         
         # Next page entry...
-        ul_paging = beautifulSoup.find( "ul", { "class" : "paging" } )
+        ul_paging = beautifulSoup.find("ul", { "class" : "paging" } )
         if ul_paging :
-            listitem = xbmcgui.ListItem (__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
+            listitem = xbmcgui.ListItem(__language__(30503), iconImage = "DefaultFolder.png", thumbnailImage = os.path.join(self.IMAGES_PATH, 'next-page.png'))
             xbmcplugin.addDirectoryItem( handle = int(sys.argv[1]), url = "%s?action=list-show&show-url=%s&page=%i" % ( sys.argv[0], urllib.quote_plus( self.show_url ), self.current_page + 1 ), listitem = listitem, isFolder = True)
 
         # Disable sorting...
