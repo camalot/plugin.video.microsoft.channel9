@@ -33,9 +33,10 @@ class Main:
 
         #
         # Tags
+        # Tags are not working - looks like it changed how they are loaded.
         #
-        listitem = xbmcgui.ListItem( __language__(30402), iconImage="DefaultFolder.png" )
-        xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1] ), url = '%s?action=browse-tags' % ( sys.argv[ 0 ] ), listitem=listitem, isFolder=True)
+        #listitem = xbmcgui.ListItem( __language__(30402), iconImage="DefaultFolder.png" )
+        #xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1] ), url = '%s?action=browse-tags' % ( sys.argv[ 0 ] ), listitem=listitem, isFolder=True)
 
         #
         # Shows

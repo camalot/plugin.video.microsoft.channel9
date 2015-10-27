@@ -37,54 +37,54 @@ if rootDir[-1] == ';':
     rootDir = rootDir[0:-1]
 rootDir = xbmc.translatePath(rootDir)
 
-LIB_DIR = xbmc.translatePath( os.path.join( rootDir, 'resources', 'lib' ) )
-sys.path.append (LIB_DIR)
+LIB_DIR = xbmc.translatePath(os.path.join(rootDir, 'resources', 'lib'))
+sys.path.append(LIB_DIR)
 
 #
 # All (list)
 #
-if ( "action=list-all" in sys.argv[ 2 ] ):
+if ("action=list-all" in sys.argv[2]):
     import ms_channel9_list_all as plugin
 #
 # Tags (browse)
 #
-elif ( "action=browse-tags" in sys.argv[ 2 ] ):
+elif ("action=browse-tags" in sys.argv[2]):
     import ms_channel9_browse_tags as plugin
 #
 # Tag (list)
 #
-elif ( "action=list-tag" in sys.argv[ 2 ] ):
-    import ms_channel9_list_tag as plugin    
+elif ("action=list-tag" in sys.argv[2]):
+    import ms_channel9_list_tag as plugin
 #
 # Shows (browse)
 #
-elif ( "action=browse-shows" in sys.argv[ 2 ] ):
+elif ("action=browse-shows" in sys.argv[2]):
     import ms_channel9_browse_shows as plugin
 #
 # Show (list)
 #
-elif ( "action=list-show" in sys.argv[ 2 ] ):
+elif ("action=list-show" in sys.argv[2]):
     import ms_channel9_list_show as plugin
 #
 # Series (browse)
 #
-elif ( "action=browse-series" in sys.argv[ 2 ] ):
+elif ("action=browse-series" in sys.argv[2]):
     import ms_channel9_browse_series as plugin
 #
 # Series (list)
 #
-elif ( "action=list-series" in sys.argv[ 2 ] ):
+elif ("action=list-series" in sys.argv[2]):
     import ms_channel9_list_series as plugin
 #
 # Play
 #
-elif ( "action=play" in sys.argv[ 2 ] ):
+elif ("action=play" in sys.argv[2]):
     import ms_channel9_play as plugin
 #
 # Main menu
 #
-else :
-    xbmc.log( "[ADDON] %s v%s (%s)" % ( __addon__, __version__, __date__ ), xbmc.LOGNOTICE )
+else:
+    xbmc.log("[ADDON] %s v%s (%s)" % (__addon__, __version__, __date__), xbmc.LOGNOTICE)
     import ms_channel9_main as plugin
 
 plugin.Main()

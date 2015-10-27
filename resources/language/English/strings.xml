@@ -15,10 +15,10 @@
   <string id="30203">MPlayer</string>
       
   <string id="30300">Video format</string>
-  <string id="30301">Medium Quality WMV</string>
-  <string id="30302">MP4</string>
-  <string id="30303">High Quality WMV</string>
-    
+  <string id="30303">High Quality</string>
+  <string id="30301">Medium Quality</string>
+  <string id="30302">Low Quality</string>
+  <string id="30304">Best Available</string>
   <!--
    * Texts
    -->
