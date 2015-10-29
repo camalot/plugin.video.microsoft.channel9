@@ -36,21 +36,21 @@ class Main:
         # Constants
         self.DEBUG = False
         self.IMAGES_PATH = xbmc.translatePath(os.path.join(rootDir, 'resources', 'images'))
-        self.PAGELIST_RE = re.compile("(\d+) to (\d+) of \d+")
 
         # Parse parameters...
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
+        self.series_url = urllib.unquote_plus(params.get("series-url"))
         self.current_page = int(params.get("page", "1"))
 
         #
         # Get the videos...
         #
-        self.getVideos()
+        self.get_videos()
 
     #
     # Get videos...
     #
-    def getVideos(self):
+    def get_videos(self):
         #
         # Init
         #
@@ -59,20 +59,20 @@ class Main:
         # Get HTML page...
         #
         httpCommunicator = HTTPCommunicator()
-        url = "http://channel9.msdn.com/Browse/AllContent?page=%u" % self.current_page
+        url = "http://channel9.msdn.com/%s?page=%u&lang=en" % (self.series_url, self.current_page)
         htmlData = httpCommunicator.get(url)
 
         #        
         # Parse response...
         #
-        soupStrainer = SoupStrainer("ul", {"class": "entries"})
+        soupStrainer = SoupStrainer("div", {"class": "tab-content"})
         beautifulSoup = BeautifulSoup(htmlData, soupStrainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
         #
         # Parse movie entries...
         #
         ul_entries = beautifulSoup.find("ul", {"class": "entries"})
-        li_entries = ul_entries.findAll("li", recursive=False)
+        li_entries = ul_entries.findAll("li")
         for li_entry in li_entries:
             # Thumbnail...
             div_entry_image = li_entry.find("div", {"class": "entry-image"})
@@ -102,11 +102,15 @@ class Main:
             xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=listitem, isFolder=False)
 
         # Next page entry...
-        listitem = xbmcgui.ListItem(__language__(30503), iconImage="DefaultFolder.png",
-                                    thumbnailImage=os.path.join(self.IMAGES_PATH, 'next-page.png'))
-        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),
-                                    url="%s?action=list-all&page=%i" % (sys.argv[0], self.current_page + 1),
-                                    listitem=listitem, isFolder=True)
+        ul_paging = beautifulSoup.find("ul", {"class": "paging"})
+        if ul_paging:
+            if ul_paging.find("li", {"class": "next"}):
+                listitem = xbmcgui.ListItem(__language__(30503), iconImage="DefaultFolder.png",
+                                            thumbnailImage=os.path.join(self.IMAGES_PATH, 'next-page.png'))
+                xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),
+                                            url="%s?action=list-series&series-url=%s&page=%i" % (
+                                            sys.argv[0], urllib.quote_plus(self.series_url), self.current_page + 1),
+                                            listitem=listitem, isFolder=True)
 
         # Disable sorting...
         xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_NONE)
