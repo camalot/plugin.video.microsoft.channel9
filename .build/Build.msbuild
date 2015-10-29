@@ -4,7 +4,7 @@
 	<Import Project="$(MSBuildProjectDirectory)\..\.build\MSBuild.Community.Tasks.Targets" Condition="'$(MSBuildCommunityTasksPath)' == ''"/>
 
 	<ItemGroup>
-		<Code Include="$(CI_PROJECT_PATH)\**\*.*" Exclude="$(CI_PROJECT_PATH)\.*\**\*.*;$(CI_PROJECT_PATH)\bin\**\*.*;$(CI_PROJECT_PATH)\**\.gitignore"/>
+		<Code Include="$(CI_PROJECT_PATH)\**\*.*" Exclude="$(CI_PROJECT_PATH)\.*\**\*.*;$(CI_PROJECT_PATH)\bin\**\*.*;$(CI_PROJECT_PATH)\**\.gitignore;$(CI_PROJECT_PATH)\**\*.yml"/>
 	</ItemGroup>
 
 	<PropertyGroup>

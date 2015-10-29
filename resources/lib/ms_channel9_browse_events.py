@@ -58,7 +58,7 @@ class Main:
         # Get HTML page...
         #
         httpCommunicator = HTTPCommunicator()
-        url = "http://channel9.msdn.com/Browse/Events?sort=recent&page=%u&lang=en" % self.current_page
+        url = "http://channel9.msdn.com/Browse/Events?sort=atoz&page=%u&lang=en" % self.current_page
         htmlData = httpCommunicator.get(url)
 
         #        

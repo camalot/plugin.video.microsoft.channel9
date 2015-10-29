@@ -31,6 +31,7 @@ __version__ = "2.0"
 import os
 import sys
 import xbmcaddon
+import urlparse
 
 __settings__ = xbmcaddon.Addon()
 rootDir = __settings__.getAddonInfo('path')
@@ -41,75 +42,44 @@ rootDir = xbmc.translatePath(rootDir)
 LIB_DIR = xbmc.translatePath(os.path.join(rootDir, 'resources', 'lib'))
 sys.path.append(LIB_DIR)
 
-#
-# All (list)
-#
-if "action=list-all" in sys.argv[2]:
-    import ms_channel9_list_all as plugin
-#
-# Tags (browse)
-#
-elif "action=browse-tags" in sys.argv[2]:
-    import ms_channel9_browse_tags as plugin
-#
-# Tag (list)
-#
-elif "action=list-tag" in sys.argv[2]:
-    import ms_channel9_list_tag as plugin
-#
-# Shows (browse)
-#
-elif "action=browse-shows" in sys.argv[2]:
-    import ms_channel9_browse_shows as plugin
-#
-# Show (list)
-#
-elif "action=list-show" in sys.argv[2]:
-    import ms_channel9_list_show as plugin
-#
-# Series (browse)
-#
-elif "action=browse-series" in sys.argv[2]:
-    import ms_channel9_browse_series as plugin
-#
-# Series (list)
-#
-elif "action=list-series" in sys.argv[2]:
-    import ms_channel9_list_series as plugin
-#
-# Events (list)
-#
-elif "action=list-event" in sys.argv[2]:
-    import ms_channel9_list_events as plugin
-#
-# Events (browse)
-#
-elif "action=browse-event" in sys.argv[2]:
-    import ms_channel9_browse_events as plugin
-#
-# Live Events (browse)
-#
-elif "action=browse-live" in sys.argv[2]:
-    import ms_channel9_browse_live as plugin
-#
-# Blogs (list)
-#
-elif "action=list-blog" in sys.argv[2]:
-    import ms_channel9_list_blogs as plugin
-#
-# Events (browse)
-#
-elif "action=browse-blog" in sys.argv[2]:
-    import ms_channel9_browse_blogs as plugin
-#
-# Play
-#
-elif "action=play" in sys.argv[2]:
-    import ms_channel9_play as plugin
+params = dict(urlparse.parse_qsl(sys.argv[2].replace('?', '')))
 
-#
-# Main menu
-#
+try:
+    action = params['action']
+except:
+    action = None
+
+if action is None:
+    import ms_channel9_main as plugin
+
+if action == 'list-all':
+    import ms_channel9_list_all as plugin
+elif action == 'browse-tags':
+    import ms_channel9_browse_tags as plugin
+elif action == 'browse-tag-item':
+    import ms_channel9_browse_tag_item as plugin
+elif action == 'list-tag':
+    import ms_channel9_list_tag as plugin
+elif action == 'browse-shows':
+    import ms_channel9_browse_shows as plugin
+elif action == 'list-show':
+    import ms_channel9_list_show as plugin
+elif action == 'browse-series':
+    import ms_channel9_browse_series as plugin
+elif action == 'list-series':
+    import ms_channel9_list_series as plugin
+elif action == 'list-event':
+    import ms_channel9_list_events as plugin
+elif action == 'browse-event':
+    import ms_channel9_browse_events as plugin
+elif action == 'browse-live':
+    import ms_channel9_browse_live as plugin
+elif action == 'list-blog':
+    import ms_channel9_list_blogs as plugin
+elif action == 'browse-blog':
+    import ms_channel9_browse_blogs as plugin
+elif action == 'play':
+    import ms_channel9_play as plugin
 else:
     xbmc.log("[ADDON] %s v%s (%s)" % (__addon__, __version__, __date__), xbmc.LOGNOTICE)
     import ms_channel9_main as plugin

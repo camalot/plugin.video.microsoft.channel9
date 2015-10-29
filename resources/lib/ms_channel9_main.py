@@ -33,20 +33,6 @@ class Main:
         list_item = xbmcgui.ListItem(__language__(30401), iconImage="DefaultFolder.png")
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=list-all' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
-
-        #
-        # Tags
-        # Tags are not working - looks like it changed how they are loaded.
-        #
-        # list_item = xbmcgui.ListItem( __language__(30402), iconImage="DefaultFolder.png" )
-        # xbmcplugin.addDirectoryItem( handle = int(sys.argv[ 1] ), url = '%s?action=browse-tags' % ( sys.argv[ 0 ] ), listitem=list_item, isFolder=True)
-
-        #
-        # Blogs
-        #
-        list_item = xbmcgui.ListItem(__language__(30406), iconImage="DefaultFolder.png")
-        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-blog' % (sys.argv[0]),
-                                    listitem=list_item, isFolder=True)
         #
         # Live
         #
@@ -72,6 +58,19 @@ class Main:
         #
         list_item = xbmcgui.ListItem(__language__(30404), iconImage="DefaultFolder.png")
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-series' % (sys.argv[0]),
+                                    listitem=list_item, isFolder=True)
+        #
+        # Tags
+        # Tags are not working - looks like it changed how they are loaded.
+        #
+        list_item = xbmcgui.ListItem(__language__(30402), iconImage="DefaultFolder.png")
+        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-tags' % (sys.argv[0]),
+                                    listitem=list_item, isFolder=True)
+        #
+        # Blogs
+        #
+        list_item = xbmcgui.ListItem(__language__(30406), iconImage="DefaultFolder.png")
+        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-blog' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
 
         # Disable sorting...

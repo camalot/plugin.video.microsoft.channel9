@@ -8,6 +8,7 @@ import xbmcgui
 import xbmcplugin
 import xbmcaddon
 import urllib
+import json
 import httplib
 import re
 from BeautifulSoup import SoupStrainer
@@ -39,7 +40,10 @@ class Main:
 
         # Parse parameters...
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
-        self.current_page = int(params.get("page", "1"))
+        self.tag = urllib.unquote_plus(params.get("tag"))
+
+        if self.tag == '#':
+            self.tag = 'more'
 
         #
         # Get the videos...
@@ -54,12 +58,17 @@ class Main:
         # Init
         #
 
-        tag_list = __language__(30601)
-        for tag in tag_list:
-            list_item = xbmcgui.ListItem(tag, iconImage="DefaultFolder.png",
+        http_communicator = HTTPCommunicator()
+        url = "https://channel9.msdn.com/Browse/Tags/firstLetter/%s/json" % self.tag
+        json_data = http_communicator.get(url)
+
+        tags = json.loads(json_data)
+
+        for tag in tags:
+            list_item = xbmcgui.ListItem("%s (%s)" % (tag['name'], tag['entries']), iconImage="DefaultFolder.png",
                                          thumbnailImage=os.path.join(self.IMAGES_PATH, 'tag.png'))
-            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url="%s?action=browse-tag-item&page=%i&tag=%s" % (
-                sys.argv[0], self.current_page + 1, tag), listitem=list_item, isFolder=True)
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url="%s?action=list-tag&tag=%s" % (
+                sys.argv[0], tag['name']), listitem=list_item, isFolder=True)
 
         # Disable sorting...
         xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_NONE)
