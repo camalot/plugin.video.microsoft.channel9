@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="14.0" DefaultTargets="Build">
+	<Import Project="$(MSBuildProjectDirectory)\..\.build\CIProperties.msbuild" Condition=" '$(CIProperties)' == '' "/>
+	<Import Project="$(MSBuildProjectDirectory)\..\.build\MSBuild.Community.Tasks.Targets" Condition="'$(MSBuildCommunityTasksPath)' == ''"/>
+
+	<ItemGroup>
+		<Code Include="$(CI_PROJECT_PATH)\**\*.*" Exclude="$(CI_PROJECT_PATH)\.*\**\*.*;$(CI_PROJECT_PATH)\bin\**\*.*;$(CI_PROJECT_PATH)\**\.gitignore"/>
+	</ItemGroup>
+
+	<PropertyGroup>
+		<PowerShellExe>$(WINDIR)\System32\WindowsPowerShell\v1.0\Powershell.exe</PowerShellExe>
+	</PropertyGroup>
+
+	<Target Name="Build" DependsOnTargets="SetBuildNumber;CopyFilesToOutput;AssemblyInfo;ZipRelease">
+		
+	</Target>
+
+	<Target Name="OutputPrep">
+		<CreateProperty Value="$(CI_ARTIFACT_PATH)\$(CI_BUILD_VERSION)\">
+			<Output PropertyName="OutputPath" TaskParameter="Value" />
+		</CreateProperty>
+	</Target>
+
+
+	<Target Name="CopyFilesToOutput" DependsOnTargets="CleanBuild">
+		<Copy SourceFiles="@(Code)" DestinationFolder="$(OutputPath)$(CI_PROJECT_NAME)\%(RecursiveDir)" />
+	</Target>
+
+	<Target Name="AssemblyInfo">
+    <XmlUpdate Value="$(CI_BUILD_VERSION)"
+      XPath="/addon/@version" XmlFileName="$(OutputPath)$(CI_PROJECT_NAME)\addon.xml" />
+		<ReplaceFileText
+			InputFilename="$(OutputPath)$(CI_PROJECT_NAME)\addon.py"
+			OutputFilename="$(OutputPath)$(CI_PROJECT_NAME)\addon.py"
+			MatchExpression="\#\sVersion\s\d+\.\d+"
+			ReplacementText="# Version $(CI_BUILD_VERSION)" />
+
+		<ReplaceFileText
+			InputFilename="$(OutputPath)$(CI_PROJECT_NAME)\addon.py"
+			OutputFilename="$(OutputPath)$(CI_PROJECT_NAME)\addon.py"
+			MatchExpression="__version__\s=\s&quot;\d+\.\d+&quot;"
+			ReplacementText="__version__ = &quot;$(CI_BUILD_VERSION)&quot;" />
+		<ReplaceFileText
+			InputFilename="$(OutputPath)$(CI_PROJECT_NAME)\addon.py"
+			OutputFilename="$(OutputPath)$(CI_PROJECT_NAME)\addon.py"
+			MatchExpression="__date__\s=\s&quot;[^&quot;]+&quot;"
+			ReplacementText="__date__ = &quot;$(CI_BUILD_DATE)&quot;" />
+
+	</Target>
+
+	<Target Name="CleanBuild" DependsOnTargets="OutputPrep">
+		<RemoveDir Directories="$(OutputPath)" Condition="Exists('$(OutputPath)')" ContinueOnError="true" />
+		<Message Importance="high" Text="Creating '$(OutputPath)'" />
+		<MakeDir Directories="$(OutputPath)" Condition="!Exists('$(OutputPath)')" />
+		<MakeDir Directories="$(OutputPath)\$(CI_PROJECT_NAME)" Condition="!Exists('$(OutputPath)$(CI_PROJECT_NAME)')" />
+	</Target>
+
+	<Target Name="ZipRelease">
+		<CreateItem Include="$(OutputPath)$(CI_PROJECT_NAME)\**\*" Exclude="$(OutputPath)*.zip;">
+			<Output ItemName="ZipFiles" TaskParameter="Include" />
+		</CreateItem>
+		
+		<Zip Comment="[Build Date: $(CI_BUILD_DATE) $(CI_BUILD_TIME)]
+$(CI_PROJECT_NAME) version $(CI_BUILD_VERSION)
+
+$(CI_PROJECT_URL)" Files="@(ZipFiles);"
+				 WorkingDirectory="$(OutputPath)$(CI_PROJECT_NAME)"
+				 ZipFileName="$(OutputPath)$(CI_PROJECT_NAME).$(CI_BUILD_VERSION).zip" ZipLevel="9" Flatten="False" />
+		<Delete Files="@(ZipFiles)" />
+		<RemoveDir Directories="$(OutputPath)$(CI_PROJECT_NAME)\" />
+	</Target>
+
+	<Target Name="SetBuildNumber">
+		<VersionRevision>
+			<Output PropertyName="Revision" TaskParameter="Revision" />
+		</VersionRevision>
+
+		<CreateProperty Value="$(Revision)">
+			<Output PropertyName="CI_BUILD_REVISION" TaskParameter="Value" />
+		</CreateProperty>
+
+		<CreateProperty Value="$(Build)" Condition=" '$(CI_BUILD_NUMBER)' == '0' ">
+			<Output PropertyName="CI_BUILD_NUMBER" TaskParameter="Value" />
+		</CreateProperty>
+
+
+		<CreateProperty Value="$(Major).$(Minor).$(CI_BUILD_NUMBER).$(CI_BUILD_REVISION)">
+			<Output PropertyName="CI_BUILD_VERSION" TaskParameter="Value" />
+		</CreateProperty>
+
+	</Target>
+
+	<UsingTask
+		TaskName="VersionRevision"
+		TaskFactory="CodeTaskFactory"
+		AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
+		<ParameterGroup>
+			<Revision ParameterType="System.Int32" Output="true" />
+		</ParameterGroup>
+		<Task>
+			<Using Namespace="System" />
+			<Code Type="Fragment" Language="cs">
+				<![CDATA[
+				var yy = DateTime.UtcNow.ToString("yy");
+				var day = DateTime.UtcNow.DayOfYear.ToString() ;
+				// 27015 = 09/26/2015
+				this.Revision = int.Parse(day + yy);
+      ]]>
+			</Code>
+
+		</Task>
+
+	</UsingTask>
+
+	<UsingTask TaskName="ReplaceFileText" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
+		<ParameterGroup>
+			<InputFilename ParameterType="System.String" Required="true" />
+			<OutputFilename ParameterType="System.String" Required="true" />
+			<MatchExpression ParameterType="System.String" Required="true" />
+			<ReplacementText ParameterType="System.String" Required="true" />
+		</ParameterGroup>
+		<Task>
+			<Reference Include="System.Core" />
+			<Using Namespace="System" />
+			<Using Namespace="System.IO" />
+			<Using Namespace="System.Text.RegularExpressions" />
+			<Code Type="Fragment" Language="cs">
+				<![CDATA[
+            File.WriteAllText(
+                OutputFilename,
+                Regex.Replace(File.ReadAllText(InputFilename), MatchExpression, ReplacementText)
+                );
+          ]]>
+			</Code>
+		</Task>
+	</UsingTask>
+
+</Project>
