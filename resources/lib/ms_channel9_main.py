@@ -72,7 +72,12 @@ class Main:
         list_item = xbmcgui.ListItem(__language__(30406), iconImage="DefaultFolder.png")
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-blog' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
-
+        #
+        # Authors
+        #
+        list_item = xbmcgui.ListItem(__language__(30408), iconImage="DefaultFolder.png")
+        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-authors' % (sys.argv[0]),
+                                    listitem=list_item, isFolder=True)
         # Disable sorting...
         xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_NONE)
 

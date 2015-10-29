@@ -61,23 +61,22 @@ class Main:
         #
         # Get HTML page...
         #
-        httpCommunicator = HTTPCommunicator()
+        http_communicator = HTTPCommunicator()
         url = "http://channel9.msdn.com/%s?page=%u" % (self.show_url, self.current_page)
-        htmlData = httpCommunicator.get(url)
-        htmlParser = HTMLParser.HTMLParser()
+        html_data = http_communicator.get(url)
+        html_parser = HTMLParser.HTMLParser()
         #        
         # Parse response...
         #
-        soupStrainer = SoupStrainer("div", {"class": "tab-content"})
-        beautifulSoup = BeautifulSoup(htmlData, soupStrainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
         #
         # Parse movie entries...
         #
-        ul_entries = beautifulSoup.find("ul", {"class": "entries"})
+        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
 
         if ul_entries is None:
-            print htmlData
             return
 
         li_entries = ul_entries.findAll("li")
@@ -93,7 +92,7 @@ class Main:
             # Title
             div_entry_meta = li_entry.find("div", {"class": "entry-meta"})
             a_title = div_entry_meta.find("a", {"class": "title"})
-            title = htmlParser.unescape(a_title.string)
+            title = html_parser.unescape(a_title.string)
 
             # Video page
             video_page_url = a_title["href"]
@@ -121,7 +120,7 @@ class Main:
             xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=listitem, isFolder=False)
 
         # Next page entry...
-        ul_paging = beautifulSoup.find("ul", {"class": "paging"})
+        ul_paging = beautiful_soup.find("ul", {"class": "paging"})
         if ul_paging:
             listitem = xbmcgui.ListItem(__language__(30503), iconImage="DefaultFolder.png",
                                         thumbnailImage=os.path.join(self.IMAGES_PATH, 'next-page.png'))

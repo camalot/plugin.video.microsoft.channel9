@@ -9,6 +9,7 @@ import xbmcplugin
 import xbmcaddon
 import urllib
 import httplib
+import HTMLParser
 import re
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
@@ -44,66 +45,46 @@ class Main:
         #
         # Get the videos...
         #
-        self.get_videos()
+        self.get_authors()
 
     #
     # Get videos...
     #
-    def get_videos(self):
-        #
-        # Init
-        #
+    def get_authors(self):
 
-        #
-        # Get HTML page...
-        #
         http_communicator = HTTPCommunicator()
-        url = "http://channel9.msdn.com/Browse/Blogs?sort=recent&page=%u&lang=en" % self.current_page
+        url = "https://channel9.msdn.com/Browse/Authors?direction=desc&sort=atoz&page=%u&lang=en" % self.current_page
         html_data = http_communicator.get(url)
+        html_parser = HTMLParser.HTMLParser()
 
-        #        
-        # Parse response...
-        #
-        soup_strainer = SoupStrainer("ul", {"class": "entries"})
+        soup_strainer = SoupStrainer("ul", {"class": "authors"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
-        #
-        # Parse shows...
-        #
+
         li_entries = beautiful_soup.findAll("li")
         for li_entry in li_entries:
-            # Thumbnail...
-            div_entry_image = li_entry.find("div", {"class": "entry-image"})
-            thumbnail = div_entry_image.find("img", {"class": "thumb"})["src"]
+            div_author_image = li_entry.find("img", {"class": "avatar"})
 
-            # Title
-            div_entry_meta = li_entry.find("div", {"class": "entry-meta"})
-            a_title = div_entry_meta.find("a", {"class": "title"})
-            title = a_title.string
-
-            # Show page URL
-            show_url = a_title["href"]
-
-            # this is to ignore things that are not linked to channel9
-            if re.match('^https?:', show_url):
+            if div_author_image is None:
                 continue
 
-            print show_url
+            author_thumb = div_author_image['src']
+            author_a = li_entry.find("a", {"class": "button"})
+            author_link = author_a['href']
 
-            # Plot
-            div_description = div_entry_meta.find("div", {"class": "description"})
-            plot = div_description.string
+            span_name = li_entry.find("span", {"class": "name"})
+            author_name = html_parser.unescape(span_name.string)
+            span_count = li_entry.find("span", {"class": "count"})
 
-            # Add to list...
-            listitem = xbmcgui.ListItem(title, iconImage="DefaultFolder.png", thumbnailImage=thumbnail)
-            plugin_list_show = '%s?action=list-blog&blog-url=%s' % (sys.argv[0], urllib.quote_plus(show_url))
-            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=plugin_list_show, listitem=listitem, isFolder=True)
+            list_item = xbmcgui.ListItem(author_name, iconImage="DefaultFolder.png", thumbnailImage=author_thumb)
+            folder_item = '%s?action=list-author&author-url=%s' % (sys.argv[0], urllib.quote_plus(author_link))
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=folder_item, listitem=list_item, isFolder=True)
 
         # Next page entry...
         listitem = xbmcgui.ListItem(__language__(30503), iconImage="DefaultFolder.png",
                                     thumbnailImage=os.path.join(self.IMAGES_PATH, 'next-page.png'))
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),
-                                    url="%s?action=browse-blog&page=%i" % (sys.argv[0], self.current_page + 1),
+                                    url="%s?action=browse-authors&page=%i" % (sys.argv[0], self.current_page + 1),
                                     listitem=listitem, isFolder=True)
 
         # Disable sorting...

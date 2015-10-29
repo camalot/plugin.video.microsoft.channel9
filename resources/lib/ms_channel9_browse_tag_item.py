@@ -67,8 +67,8 @@ class Main:
         for tag in tags:
             list_item = xbmcgui.ListItem("%s (%s)" % (tag['name'], tag['entries']), iconImage="DefaultFolder.png",
                                          thumbnailImage=os.path.join(self.IMAGES_PATH, 'tag.png'))
-            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url="%s?action=list-tag&tag=%s" % (
-                sys.argv[0], tag['name']), listitem=list_item, isFolder=True)
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url="%s?action=list-tag&tag-url=%s" % (
+                sys.argv[0], tag['href']), listitem=list_item, isFolder=True)
 
         # Disable sorting...
         xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_NONE)

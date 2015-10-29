@@ -39,7 +39,7 @@ class Main:
 
         # Parse parameters...
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
-        self.tag_url = urllib.unquote_plus(params.get("tag-url"))
+        self.author_url = urllib.unquote_plus(params.get("author-url"))
         self.current_page = int(params.get("page", "1"))
 
         #
@@ -54,19 +54,18 @@ class Main:
         #
         # Init
         #
-
+        sysaddon = sys.argv[0]
         #
         # Get HTML page...
         #
         http_communicator = HTTPCommunicator()
-        url = "http://channel9.msdn.com/%s?page=%u" % (self.tag_url, self.current_page)
-        print "tag-url: %s" % url
+        url = "http://channel9.msdn.com/%s/posts?page=%u&lang=en" % (self.author_url, self.current_page)
         html_data = http_communicator.get(url)
 
         #        
         # Parse response...
         #
-        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        soup_strainer = SoupStrainer("div", {"class": "user-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
         #
@@ -78,6 +77,10 @@ class Main:
             # Thumbnail...
             div_entry_image = li_entry.find("div", {"class": "entry-image"})
             thumbnail = div_entry_image.find("img", {"class": "thumb"})["src"]
+
+            # check if the entry is a video
+            if div_entry_image.find("div", {"class": "entry-caption"}) is None:
+                continue
 
             # Title
             div_entry_meta = li_entry.find("div", {"class": "entry-meta"})
@@ -97,19 +100,21 @@ class Main:
             plot = div_description.string
 
             # Add to list...
-            list_item = xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
-            list_item.setInfo("video", {"Title": title, "Studio": "Microsoft Channel 9", "Plot": plot, "Genre": genre})
+            # cm = []
+            # cm.append(xbmcplugin.lang(30239).encode('utf-8'), 'RunPlugin(%s?action=tvshowToLibrary&tvshowtitle=%s)' % (sysaddon, title))
+
+            listitem = xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
+            listitem.setInfo("video", {"Title": title, "Studio": "Microsoft Channel 9", "Plot": plot, "Genre": genre})
             plugin_play_url = '%s?action=play&video_page_url=%s' % (sys.argv[0], urllib.quote_plus(video_page_url))
-            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=list_item, isFolder=False)
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=listitem, isFolder=False)
 
         # Next page entry...
         ul_paging = beautiful_soup.find("ul", {"class": "paging"})
         if ul_paging:
-            if ul_paging.find("li", {"class": "next"}):
-                list_item = xbmcgui.ListItem(__language__(30503), iconImage="DefaultFolder.png",
-                                             thumbnailImage=os.path.join(self.IMAGES_PATH, 'next-page.png'))
-                xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url="%s?action=list-tag&tag-url=%s&page=%i" % (
-                    sys.argv[0], self.tag_url, self.current_page + 1), listitem=list_item, isFolder=True)
+            listitem = xbmcgui.ListItem(__language__(30503), iconImage="DefaultFolder.png",
+                                        thumbnailImage=os.path.join(self.IMAGES_PATH, 'next-page.png'))
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url="%s?action=list-show&show-url=%s&page=%i" % (
+            sys.argv[0], urllib.quote_plus(self.author_url), self.current_page + 1), listitem=listitem, isFolder=True)
 
         # Disable sorting...
         xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_NONE)
