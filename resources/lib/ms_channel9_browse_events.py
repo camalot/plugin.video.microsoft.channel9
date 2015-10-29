@@ -83,6 +83,11 @@ class Main:
 
             # Show page URL
             show_url = a_title["href"]
+
+            # this is to ignore things that are not linked to channel9
+            if re.match('^https?:', show_url):
+                continue
+
             print show_url
 
             # Plot
