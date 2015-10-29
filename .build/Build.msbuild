@@ -65,7 +65,8 @@ $(CI_PROJECT_NAME) version $(CI_BUILD_VERSION)
 
 $(CI_PROJECT_URL)" Files="@(ZipFiles);"
 				 WorkingDirectory="$(OutputPath)$(CI_PROJECT_NAME)"
-				 ZipFileName="$(OutputPath)$(CI_PROJECT_NAME).$(CI_BUILD_VERSION).zip" ZipLevel="9" Flatten="False" />
+				 ZipFileName="$(OutputPath)$(CI_PROJECT_NAME).$(CI_BUILD_VERSION).zip" ZipLevel="0" Flatten="False" />
+				 
 		<Delete Files="@(ZipFiles)" />
 		<RemoveDir Directories="$(OutputPath)$(CI_PROJECT_NAME)\" />
 	</Target>
