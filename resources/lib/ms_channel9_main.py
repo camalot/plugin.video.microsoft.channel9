@@ -47,8 +47,12 @@ class Main:
         list_item = xbmcgui.ListItem(__language__(30406), iconImage="DefaultFolder.png")
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-blog' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
-
-
+        #
+        # Live
+        #
+        list_item = xbmcgui.ListItem(__language__(30407), iconImage="DefaultFolder.png")
+        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-live' % (sys.argv[0]),
+                                    listitem=list_item, isFolder=True)
         #
         # Events
         #

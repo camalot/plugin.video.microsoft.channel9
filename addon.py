@@ -87,6 +87,11 @@ elif "action=list-event" in sys.argv[2]:
 elif "action=browse-event" in sys.argv[2]:
     import ms_channel9_browse_events as plugin
 #
+# Live Events (browse)
+#
+elif "action=browse-live" in sys.argv[2]:
+    import ms_channel9_browse_live as plugin
+#
 # Blogs (list)
 #
 elif "action=list-blog" in sys.argv[2]:
