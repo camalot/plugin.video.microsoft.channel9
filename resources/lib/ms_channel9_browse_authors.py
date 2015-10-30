@@ -3,17 +3,16 @@
 #
 import os
 import sys
+import urllib
+import HTMLParser
+
 import xbmc
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
-import urllib
-import httplib
-import HTMLParser
-import re
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from ms_channel9_utils import HTTPCommunicator
+from HTTPCommunicator import HTTPCommunicator
 
 #
 # Constants
@@ -76,7 +75,7 @@ class Main:
             author_name = html_parser.unescape(span_name.string)
             span_count = li_entry.find("span", {"class": "count"})
 
-            list_item = xbmcgui.ListItem(author_name, iconImage="DefaultFolder.png", thumbnailImage=author_thumb)
+            list_item = xbmcgui.ListItem(author_name, iconImage="DefaultDirector.png", thumbnailImage=author_thumb)
             folder_item = '%s?action=list-author&author-url=%s' % (sys.argv[0], urllib.quote_plus(author_link))
             xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=folder_item, listitem=list_item, isFolder=True)
 

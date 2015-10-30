@@ -1,18 +1,17 @@
 #
 # Imports
 #
-import os
 import sys
+import urllib
+
 import xbmc
 import xbmcgui
-import xbmcplugin
 import xbmcaddon
-import xml.dom.minidom
-import re
-import urllib
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from ms_channel9_utils import HTTPCommunicator
+from HTTPCommunicator import HTTPCommunicator
+
+
 
 #
 # Constants
@@ -62,12 +61,12 @@ class Main:
         #
         # Play video...
         #
-        self.playVideo()
+        self.play_video()
 
     #
     # Play video...
     #
-    def playVideo(self):
+    def play_video(self):
         if (self.DEBUG):
             print "video_page_url = " + self.video_page_url
 
@@ -83,18 +82,18 @@ class Main:
         #
         # Show wait dialog while parsing data...
         #
-        dialogWait = xbmcgui.DialogProgress()
-        dialogWait.create(__language__(30504), title)
+        dialog_wait = xbmcgui.DialogProgress()
+        dialog_wait.create(__language__(30504), title)
 
         #
         # Get video URL...
         #
-        video_url = self.getVideoUrl(self.video_page_url)
+        video_url = self.get_video_url(self.video_page_url)
 
-        if video_url == None:
+        if video_url is None:
             # Close wait dialog...
-            dialogWait.close()
-            del dialogWait
+            dialog_wait.close()
+            del dialog_wait
 
             # Message...
             xbmcgui.Dialog().ok(__language__(30000), __language__(30505))
@@ -106,13 +105,13 @@ class Main:
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
 
-        listitem = xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
-        listitem.setInfo("video", {"Title": title, "Studio": studio, "Plot": plot, "Genre": genre})
-        playlist.add(video_url, listitem)
+        list_item = xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
+        list_item.setInfo("video", {"Title": title, "Studio": studio, "Plot": plot, "Genre": genre})
+        playlist.add(video_url, list_item)
 
         # Close wait dialog...
-        dialogWait.close()
-        del dialogWait
+        dialog_wait.close()
+        del dialog_wait
 
         # Play video...
         xbmcPlayer = xbmc.Player()
@@ -121,52 +120,27 @@ class Main:
     #
     # Get video URL
     #
-    def getVideoUrl(self, video_page_url):
+    def get_video_url(self, video_page_url):
         # 
         # Get HTML page...
         # 
         video_page_url = "http://channel9.msdn.com%s" % video_page_url
-        httpCommunicator = HTTPCommunicator()
-        htmlData = httpCommunicator.get(video_page_url)
+        http_communicator = HTTPCommunicator()
+        html_data = http_communicator.get(video_page_url)
 
         #                
         # Parse HTML response...
         #
-        soupStrainer = SoupStrainer("ul", {"class": "download"})
-        beautifulSoup = BeautifulSoup(htmlData, soupStrainer)
+        soup_strainer = SoupStrainer("ul", {"class": "download"})
+        beautiful_soup = BeautifulSoup(html_data, soup_strainer)
 
-        #
-        # Loop through video URLs and pick one...
-        #
         video_url = None
-
-        # Preferred format...
-        li_entries = beautifulSoup.findAll("li")
+        li_entries = beautiful_soup.findAll("li")
         for li_entry in li_entries:
             li_entry_a = li_entry.find("a")
-            if li_entry_a != None:
+            if li_entry_a is not None:
                 for quality in self.video_formats:
                     if li_entry_a.string == quality:
                         video_url = li_entry_a["href"]
                         break
-
-        # No preferred format found, pick any available...
-        # if video_url == None :
-        #    for li_entry in li_entries :
-        #        li_entry_a = li_entry.find( "a" )
-        #        if li_entry_a != None :
-        #            format = li_entry_a.string
-        #            if format == __settings__.getLocalizedString(30303) or \
-        #               format == __settings__.getLocalizedString(30302) or \
-        #               format == __settings__.getLocalizedString(30301) :
-        #                video_url = li_entry_a[ "href" ]
-        #                break
-
-        #
-        # Return value
-        #
         return video_url
-
-        #
-        # The End
-        #

@@ -84,8 +84,10 @@ elif action == 'browse-authors':
     import ms_channel9_browse_authors as plugin
 elif action == 'list-author':
     import ms_channel9_list_author as plugin
+elif action == 'search':
+    import search as plugin
 elif action == 'play':
-    import ms_channel9_play as plugin
+    import play as plugin
 else:
     xbmc.log("[ADDON] %s v%s (%s)" % (__addon__, __version__, __date__), xbmc.LOGNOTICE)
     import ms_channel9_main as plugin

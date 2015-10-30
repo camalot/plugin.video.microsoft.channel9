@@ -3,17 +3,18 @@
 #
 import os
 import sys
+import urllib
+import HTMLParser
+
 import xbmc
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
-import urllib
-import httplib
-import HTMLParser
-import re
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from ms_channel9_utils import HTTPCommunicator
+from HTTPCommunicator import HTTPCommunicator
+
+
 
 #
 # Constants

@@ -3,16 +3,12 @@
 #
 import os
 import sys
+
 import xbmc
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
-import urllib
-import httplib
-import re
-from BeautifulSoup import SoupStrainer
-from BeautifulSoup import BeautifulSoup
-from ms_channel9_utils import HTTPCommunicator
+
 
 #
 # Constants

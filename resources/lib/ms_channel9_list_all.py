@@ -3,16 +3,18 @@
 #
 import os
 import sys
+import urllib
+import re
+
 import xbmc
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
-import urllib
-import httplib
-import re
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from ms_channel9_utils import HTTPCommunicator
+from HTTPCommunicator import HTTPCommunicator
+
+
 
 #
 # Constants
@@ -58,20 +60,20 @@ class Main:
         #
         # Get HTML page...
         #
-        httpCommunicator = HTTPCommunicator()
+        http_communicator = HTTPCommunicator()
         url = "http://channel9.msdn.com/Browse/AllContent?page=%u" % self.current_page
-        htmlData = httpCommunicator.get(url)
+        html_data = http_communicator.get(url)
 
         #        
         # Parse response...
         #
-        soupStrainer = SoupStrainer("ul", {"class": "entries"})
-        beautifulSoup = BeautifulSoup(htmlData, soupStrainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        soup_strainer = SoupStrainer("ul", {"class": "entries"})
+        beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
         #
         # Parse movie entries...
         #
-        ul_entries = beautifulSoup.find("ul", {"class": "entries"})
+        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
         li_entries = ul_entries.findAll("li", recursive=False)
         for li_entry in li_entries:
             # Thumbnail...

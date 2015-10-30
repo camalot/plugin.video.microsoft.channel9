@@ -3,16 +3,17 @@
 #
 import os
 import sys
+import urllib
+
 import xbmc
 import xbmcgui
 import xbmcplugin
 import xbmcaddon
-import urllib
-import httplib
-import re
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from ms_channel9_utils import HTTPCommunicator
+from HTTPCommunicator import HTTPCommunicator
+
+
 
 #
 # Constants
@@ -99,14 +100,11 @@ class Main:
             div_description = div_entry_meta.find("div", {"class": "description"})
             plot = div_description.string
 
-            # Add to list...
-            # cm = []
-            # cm.append(xbmcplugin.lang(30239).encode('utf-8'), 'RunPlugin(%s?action=tvshowToLibrary&tvshowtitle=%s)' % (sysaddon, title))
-
-            listitem = xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
-            listitem.setInfo("video", {"Title": title, "Studio": "Microsoft Channel 9", "Plot": plot, "Genre": genre})
+            list_item = xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
+            list_item.setInfo("video", {"Title": title, "Studio": "Microsoft Channel 9", "Plot": plot, "Genre": genre})
             plugin_play_url = '%s?action=play&video_page_url=%s' % (sys.argv[0], urllib.quote_plus(video_page_url))
-            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=listitem, isFolder=False)
+            xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=list_item,
+                                        isFolder=False)
 
         # Next page entry...
         ul_paging = beautiful_soup.find("ul", {"class": "paging"})
@@ -114,7 +112,8 @@ class Main:
             listitem = xbmcgui.ListItem(__language__(30503), iconImage="DefaultFolder.png",
                                         thumbnailImage=os.path.join(self.IMAGES_PATH, 'next-page.png'))
             xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url="%s?action=list-show&show-url=%s&page=%i" % (
-            sys.argv[0], urllib.quote_plus(self.author_url), self.current_page + 1), listitem=listitem, isFolder=True)
+                sys.argv[0], urllib.quote_plus(self.author_url), self.current_page + 1), listitem=listitem,
+                                        isFolder=True)
 
         # Disable sorting...
         xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_NONE)

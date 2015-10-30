@@ -7,5 +7,9 @@ Supports the following:
 - All Videos
 - Series
 - Shows
-- Events
+- Past Events
+- Live Events
 - Blogs
+- Tags
+- Authors
+- Search

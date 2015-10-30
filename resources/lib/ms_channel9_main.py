@@ -30,54 +30,61 @@ class Main:
         #
         # All
         #
-        list_item = xbmcgui.ListItem(__language__(30401), iconImage="DefaultFolder.png")
+        list_item = xbmcgui.ListItem(__language__(30401), iconImage="%s/all.png" % IMAGES_DIR)
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=list-all' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
         #
         # Live
         #
-        list_item = xbmcgui.ListItem(__language__(30407), iconImage="DefaultFolder.png")
+        list_item = xbmcgui.ListItem(__language__(30407), iconImage="%s/event.png" % IMAGES_DIR)
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-live' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
         #
         # Events
         #
-        list_item = xbmcgui.ListItem(__language__(30405), iconImage="DefaultFolder.png")
+        list_item = xbmcgui.ListItem(__language__(30405), iconImage="%s/event.png" % IMAGES_DIR)
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-event' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
 
         #
         # Shows
         #
-        list_item = xbmcgui.ListItem(__language__(30403), iconImage="DefaultFolder.png")
+        list_item = xbmcgui.ListItem(__language__(30403), iconImage="%s/tv.png" % IMAGES_DIR)
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-shows' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
 
         #
         # Series
         #
-        list_item = xbmcgui.ListItem(__language__(30404), iconImage="DefaultFolder.png")
+        list_item = xbmcgui.ListItem(__language__(30404), iconImage="%s/tv.png" % IMAGES_DIR)
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-series' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
         #
         # Tags
         # Tags are not working - looks like it changed how they are loaded.
         #
-        list_item = xbmcgui.ListItem(__language__(30402), iconImage="DefaultFolder.png")
+        list_item = xbmcgui.ListItem(__language__(30402), iconImage="%s/tag.png" % IMAGES_DIR)
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-tags' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
         #
         # Blogs
         #
-        list_item = xbmcgui.ListItem(__language__(30406), iconImage="DefaultFolder.png")
+        list_item = xbmcgui.ListItem(__language__(30406), iconImage="%s/blog.png" % IMAGES_DIR)
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-blog' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
         #
         # Authors
         #
-        list_item = xbmcgui.ListItem(__language__(30408), iconImage="DefaultFolder.png")
+        list_item = xbmcgui.ListItem(__language__(30408), iconImage="%s/user.png" % IMAGES_DIR)
         xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=browse-authors' % (sys.argv[0]),
                                     listitem=list_item, isFolder=True)
+        #
+        # Search
+        #
+        list_item = xbmcgui.ListItem(__language__(30409), iconImage="%s/search.png" % IMAGES_DIR)
+        xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url='%s?action=search' % (sys.argv[0]),
+                                    listitem=list_item, isFolder=True)
+
         # Disable sorting...
         xbmcplugin.addSortMethod(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_NONE)
 
