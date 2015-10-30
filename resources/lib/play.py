@@ -113,8 +113,8 @@ class Main:
         del dialog_wait
 
         # Play video...
-        xbmcPlayer = xbmc.Player()
-        xbmcPlayer.play(playlist)
+        xbmc_player = xbmc.Player()
+        xbmc_player.play(playlist)
 
     #
     # Get video URL
