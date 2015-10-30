@@ -60,7 +60,7 @@ class Main:
         # Get HTML page...
         #
         http_communicator = HTTPCommunicator()
-        url = "http://channel9.msdn.com/%s?page=%u" % (self.tag_url, self.current_page)
+        url = "http://channel9.msdn.com/%s?page=%u" % (urllib.quote_plus(self.tag_url), self.current_page)
         print "tag-url: %s" % url
         html_data = http_communicator.get(url)
 

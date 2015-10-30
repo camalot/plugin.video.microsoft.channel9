@@ -3,7 +3,7 @@
 #
 import sys
 import urllib
-
+import re
 import xbmc
 import xbmcgui
 import xbmcaddon
@@ -39,7 +39,6 @@ class Main:
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
 
         self.video_page_url = urllib.unquote_plus(params["video_page_url"])
-
         #
         # Settings
         #
@@ -123,8 +122,10 @@ class Main:
     def get_video_url(self, video_page_url):
         # 
         # Get HTML page...
-        # 
-        video_page_url = "http://channel9.msdn.com%s" % video_page_url
+        #
+        if not re.match('^https?:', self.video_page_url):
+            video_page_url = "http://channel9.msdn.com%s" % video_page_url
+
         http_communicator = HTTPCommunicator()
         html_data = http_communicator.get(video_page_url)
 
