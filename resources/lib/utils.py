@@ -42,11 +42,11 @@ def add_entry_video(entry):
     control.addItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=list_item, isFolder=False)
 
 
-def add_next_page(self, bs, item_url, page):
+def add_next_page(bs, item_url, page):
     ul_paging = bs.find("ul", {"class": "paging"})
     if ul_paging is not None:
         list_item = control.item(control.lang(30503) % page, iconImage="DefaultFolder.png",
-                                 thumbnailImage=os.path.join(self.IMAGES_PATH, 'next-page.png'))
+                                 thumbnailImage=os.path.join(control.imagesPath, 'next-page.png'))
         control.addItem(handle=int(sys.argv[1]), url=item_url, listitem=list_item, isFolder=True)
 
 

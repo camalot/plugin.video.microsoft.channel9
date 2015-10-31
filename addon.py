@@ -50,7 +50,7 @@ except:
     action = None
 
 if action is None:
-    import ms_channel9_main as plugin
+    import home as plugin
 
 if action == 'list-all':
     import all_content as plugin
@@ -92,6 +92,6 @@ elif action == 'play':
     import play as plugin
 else:
     xbmc.log("[ADDON] %s v%s (%s)" % (__addon__, __version__, __date__), xbmc.LOGNOTICE)
-    import ms_channel9_main as plugin
+    import home as plugin
 
 plugin.Main()

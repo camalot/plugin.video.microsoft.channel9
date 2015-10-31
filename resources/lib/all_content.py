@@ -2,15 +2,9 @@
 # mostviewed: sort=viewed
 # toprated: sort: rating
 
-import os
 import sys
 import urllib
-import HTMLParser
 
-import xbmc
-import xbmcgui
-import xbmcplugin
-import xbmcaddon
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
 from HTTPCommunicator import HTTPCommunicator
@@ -20,10 +14,6 @@ import utils
 
 class Main:
     def __init__(self):
-        # Constants
-        self.DEBUG = False
-        self.IMAGES_PATH = control.imagesPath
-
         # Parse parameters...
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
         self.current_page = int(params.get("page", "1"))
@@ -55,7 +45,7 @@ class Main:
         utils.add_directory(control.lang(30703), "DefaultFolder.png", None, "%s?action=list-all&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30703))))
 
-        control.directory(handle=int(sys.argv[1], succeeded=True))
+        control.directory_end()
 
     def get_entries(self):
         http_communicator = HTTPCommunicator()
@@ -72,5 +62,5 @@ class Main:
 
         next_url = "%s?action=list-all&page=%i&sort=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
-        utils.add_next_page(self, beautiful_soup, next_url, self.current_page + 1)
-        control.directory(handle=int(sys.argv[1], succeeded=True))
+        utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
+        control.directory_end()

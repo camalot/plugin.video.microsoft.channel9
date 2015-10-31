@@ -63,7 +63,7 @@ class Main:
         utils.add_directory(control.lang(30704), "DefaultFolder.png", None,
                             "%s?action=browse-authors&page=%i&sort=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30704))))
-        control.directory(handle=int(sys.argv[1]), succeeded=True)
+        control.directory_end()
 
     def browse(self):
         http_communicator = HTTPCommunicator()
@@ -71,18 +71,18 @@ class Main:
             utils.url_root, urllib.quote_plus(self.sort), self.current_page, urllib.quote_plus(self.search_term),
             utils.url_langs)
         html_data = http_communicator.get(url)
-        soup_strainer = SoupStrainer("ul", {"class": "authors"})
+        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-
-        li_entries = beautiful_soup.findAll("li")
+        ul_authors = beautiful_soup.find("ul", {"class": "authors"})
+        li_entries = ul_authors.findAll("li")
         for li_entry in li_entries:
             self.add_author_directory(li_entry)
 
         next_url = "%s?action=browse-authors&page=%i&sort=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
-        utils.add_next_page(self, beautiful_soup, next_url, self.current_page + 1)
+        utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
-        control.directory(handle=int(sys.argv[1]), succeeded=True)
+        control.directory_end()
 
     def list(self):
         http_communicator = HTTPCommunicator()
@@ -99,9 +99,9 @@ class Main:
 
         next_url = "%s?action=list-author&page=%i&author-url=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.author_url))
-        utils.add_next_page(self, beautiful_soup, next_url, self.current_page + 1)
+        utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
-        control.directory(handle=int(sys.argv[1]), succeeded=True)
+        control.directory_end()
 
     def search(self):
 

@@ -1,15 +1,10 @@
 # recent: sort=recent
 # a-z: sort: atoz
 
-import os
 import sys
 import urllib
 import HTMLParser
 
-import xbmc
-import xbmcgui
-import xbmcplugin
-import xbmcaddon
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
 from HTTPCommunicator import HTTPCommunicator
@@ -19,10 +14,6 @@ import utils
 
 class Main:
     def __init__(self):
-        # Constants
-        self.DEBUG = False
-        self.IMAGES_PATH = control.imagesPath
-
         # Parse parameters...
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
         self.current_page = int(params.get("page", "1"))
@@ -64,7 +55,7 @@ class Main:
         # A to Z
         utils.add_directory(control.lang(30704), "DefaultFolder.png", None, "%s?action=browse-shows&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30704))))
-        control.directory(handle=int(sys.argv[1]), succeeded=True)
+        control.directory_end()
 
     def show_list_sort(self):
         # recent
@@ -82,24 +73,25 @@ class Main:
                             "%s?action=list-show&page=%i&sort=%s&show-url=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30703)),
                             urllib.quote_plus(self.show_url)))
-        control.directory(handle=int(sys.argv[1]), succeeded=True)
+        control.directory_end()
 
     def browse(self):
         http_communicator = HTTPCommunicator()
         url = self.browse_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.url_langs)
         html_data = http_communicator.get(url)
 
-        soup_strainer = SoupStrainer("ul", {"class": "entries"})
+        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        li_entries = beautiful_soup.findAll("li")
+        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
+        li_entries = ul_entries.findAll("li")
         for li_entry in li_entries:
             self.add_show_directory(li_entry)
 
         next_url = "%s?action=browse-shows&page=%i&sort=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
-        utils.add_next_page(self, beautiful_soup, next_url, self.current_page + 1)
+        utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
-        control.directory(handle=int(sys.argv[1]), succeeded=True)
+        control.directory_end()
 
     def list(self):
         http_communicator = HTTPCommunicator()
@@ -115,9 +107,9 @@ class Main:
 
         next_url = "%s?action=list-show&page=%i&sort=%s&show-url=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method), urllib.quote_plus(self.show_url))
-        utils.add_next_page(self, beautiful_soup, next_url, self.current_page + 1)
+        utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
-        control.directory(handle=int(sys.argv[1]), succeeded=True)
+        control.directory_end()
 
     def add_show_directory(self, entry):
         # Thumbnail...
@@ -133,6 +125,6 @@ class Main:
         show_url = a_title["href"]
 
         # Add to list...
-        list_item = xbmcgui.ListItem(title, iconImage="DefaultFolder.png", thumbnailImage=thumbnail)
+        list_item = control.item(title, iconImage="DefaultFolder.png", thumbnailImage=thumbnail)
         plugin_list_show = '%s?action=list-show&show-url=%s' % (sys.argv[0], urllib.quote_plus(show_url))
         control.addItem(handle=int(sys.argv[1]), url=plugin_list_show, listitem=list_item, isFolder=True)

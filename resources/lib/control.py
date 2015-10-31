@@ -1,4 +1,4 @@
-import os,xbmc,xbmcaddon,xbmcplugin,xbmcgui,xbmcvfs
+import sys,os,xbmc,xbmcaddon,xbmcplugin,xbmcgui,xbmcvfs
 
 
 lang = xbmcaddon.Addon().getLocalizedString
@@ -86,5 +86,17 @@ libcacheFile = os.path.join(dataPath, 'library.db')
 metacacheFile = os.path.join(dataPath, 'meta.db')
 
 cacheFile = os.path.join(dataPath, 'cache.db')
+
+def directory_end():
+    set_view_thumbnail()
+    directory(handle=int(sys.argv[1]), succeeded=True)
+
+def set_view_thumbnail():
+    if skin == 'skin.confluence':
+        execute('Container.SetViewMode(500)')
+    elif skin == 'skin.aeon.nox':
+        execute('Container.SetViewMode(511)')
+    else:
+        execute('Container.SetViewMode(500)')
 
 
