@@ -26,9 +26,15 @@ Browse the different episodes.
 
 [![home][3]][6]
 
+Search for author by name.
+
+[![Author Search][7]][8]
+
 [1]: http://i.imgur.com/ZuLpUFQl.jpg
 [2]: http://i.imgur.com/fQuA6Bvl.jpg
 [3]: http://i.imgur.com/xWzuSh5l.jpg
 [4]: http://i.imgur.com/ZuLpUFQ.jpg
 [5]: http://i.imgur.com/fQuA6Bv.jpg
 [6]: http://i.imgur.com/xWzuSh5.jpg
+[7]: http://i.imgur.com/o0Q2j5Hl.jpg
+[8]: http://i.imgur.com/o0Q2j5H.jpg
