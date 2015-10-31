@@ -16,31 +16,21 @@
 #   * Dan Dar3                                                          [http://dandar3.blogspot.com]
 #
 
-# 
-# Constants
-#
 __addon__ = "Microsoft Channel 9"
 __author__ = "Ryan Conrad"
 __url__ = "https://github.com/camalot/plugin.video.microsoft.channel9"
 __date__ = "10/27/2015"
 __version__ = "2.0"
 
-#
-# Imports
-#
 import os
 import sys
-import xbmcaddon
 import urlparse
+import xbmc
+import xbmcaddon
 
-__settings__ = xbmcaddon.Addon()
-rootDir = __settings__.getAddonInfo('path')
-if rootDir[-1] == ';':
-    rootDir = rootDir[0:-1]
-rootDir = xbmc.translatePath(rootDir)
-
-LIB_DIR = xbmc.translatePath(os.path.join(rootDir, 'resources', 'lib'))
-sys.path.append(LIB_DIR)
+addon_path = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo('path'))
+lib_path = xbmc.translatePath(os.path.join(addon_path, 'resources', 'lib'))
+sys.path.append(lib_path)
 
 params = dict(urlparse.parse_qsl(sys.argv[2].replace('?', '')))
 
@@ -75,11 +65,11 @@ elif action == 'browse-series':
 elif action == 'list-series':
     import series as plugin
 elif action == 'list-event':
-    import ms_channel9_list_events as plugin
-elif action == 'browse-event':
-    import ms_channel9_browse_events as plugin
+    import events as plugin
+elif action == 'browse-events':
+    import events as plugin
 elif action == 'browse-live':
-    import ms_channel9_browse_live as plugin
+    import events as plugin
 elif action == 'list-blog':
     import blogs as plugin
 elif action == 'browse-blogs':
@@ -88,8 +78,9 @@ elif action == 'search':
     import search as plugin
 elif action == 'play':
     import play as plugin
+elif action == 'settings':
+    import settings as plugin
 else:
-    xbmc.log("[ADDON] %s v%s (%s)" % (__addon__, __version__, __date__), xbmc.LOGNOTICE)
     import home as plugin
 
 plugin.Main()

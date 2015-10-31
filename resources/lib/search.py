@@ -15,6 +15,7 @@ class Main:
         self.search()
 
         utils.set_no_sort()
+        return
 
     def search(self):
         if self.search_query is None:
@@ -30,7 +31,7 @@ class Main:
                    % (urllib.quote_plus(self.search_query))
         http_communicator = HTTPCommunicator()
         data = http_communicator.get(base_url)
-
+        print base_url
         start_index = data.index('"documents":') + 12
         if start_index <= 12:
             return
@@ -52,3 +53,4 @@ class Main:
 
         # End of directory...
         control.directory_end()
+        return

@@ -71,6 +71,8 @@ dataPath = xbmc.translatePath(addonInfo('profile')).decode('utf-8')
 
 imagesPath = xbmc.translatePath(os.path.join(addonPath, 'resources', 'images'))
 
+libPath = xbmc.translatePath(os.path.join(addonPath, 'resources', 'lib'))
+
 settingsFile = os.path.join(dataPath, 'settings.xml')
 
 databaseFile = os.path.join(dataPath, 'settings.db')
@@ -86,6 +88,8 @@ libcacheFile = os.path.join(dataPath, 'library.db')
 metacacheFile = os.path.join(dataPath, 'meta.db')
 
 cacheFile = os.path.join(dataPath, 'cache.db')
+
+openSettings = addon().openSettings
 
 def directory_end():
     set_view_thumbnail()

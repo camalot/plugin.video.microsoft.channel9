@@ -68,16 +68,23 @@ class Main:
                             "%s?action=browse-authors&page=%i&sort=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30704))))
         control.directory_end()
+        return
 
     def browse(self):
         http_communicator = HTTPCommunicator()
         url = self.browse_url % (
             utils.url_root, urllib.quote_plus(self.sort), self.current_page, urllib.quote_plus(self.search_term),
-            utils.url_langs)
+            utils.selected_languages())
+        print url
         html_data = http_communicator.get(url)
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
         ul_authors = beautiful_soup.find("ul", {"class": "authors"})
+
+        if ul_authors is None:
+            control.directory_end()
+            return
+
         li_entries = ul_authors.findAll("li")
         for li_entry in li_entries:
             self.add_author_directory(li_entry)
@@ -89,17 +96,23 @@ class Main:
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
         control.directory_end()
+        return
 
     def list(self):
         http_communicator = HTTPCommunicator()
-        url = "%s/%s/posts?page=%u&%s" % (utils.url_root, self.author_url, self.current_page, utils.url_langs)
+        url = "%s/%s/posts?page=%u&%s" % (
+            utils.url_root, self.author_url, self.current_page, utils.selected_languages())
+        print url
         html_data = http_communicator.get(url)
         soup_strainer = SoupStrainer("div", {"class": "user-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
         ul_entries = beautiful_soup.find("ul", {"class": "entries"})
-        li_entries = ul_entries.findAll("li")
+        if ul_entries is None:
+            control.directory_end()
+            return
 
+        li_entries = ul_entries.findAll("li")
         for li_entry in li_entries:
             utils.add_entry_video(li_entry)
 
@@ -108,6 +121,7 @@ class Main:
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
         control.directory_end()
+        return
 
     def search(self):
         if self.search_term is None or self.search_term == '':
@@ -120,6 +134,7 @@ class Main:
             return
 
         self.browse()
+        return
 
     def add_author_directory(self, entry):
         html_parser = HTMLParser.HTMLParser()
@@ -141,3 +156,4 @@ class Main:
 
         folder_url = '%s?action=list-author&author-url=%s' % (sys.argv[0], urllib.quote_plus(author_link))
         utils.add_directory("%s (%s)" % (author_name, episode_count), "DefaultDirectory.png", author_thumb, folder_url)
+        return

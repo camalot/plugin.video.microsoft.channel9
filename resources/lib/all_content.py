@@ -33,6 +33,7 @@ class Main:
             self.get_entries()
         else:
             self.browse()
+        return
 
     def browse(self):
         # recent
@@ -46,16 +47,21 @@ class Main:
             sys.argv[0], 1, urllib.quote_plus(control.lang(30703))))
 
         control.directory_end()
+        return
 
     def get_entries(self):
         http_communicator = HTTPCommunicator()
-        url = self.url % (urllib.quote_plus(self.sort), self.current_page, utils.url_langs)
+        url = self.url % (urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
+        print url
         html_data = http_communicator.get(url)
 
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
         ul_entries = beautiful_soup.find("ul", {"class": "entries"})
+        if ul_entries is None:
+            control.directory_end()
+            return
         li_entries = ul_entries.findAll("li")
         for li_entry in li_entries:
             utils.add_entry_video(li_entry)
@@ -64,3 +70,4 @@ class Main:
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
         control.directory_end()
+        return

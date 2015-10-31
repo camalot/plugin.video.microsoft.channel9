@@ -57,16 +57,19 @@ class Main:
                                 "%s/%s.png" % (control.imagesPath, tag), None,
                                 "%s?action=browse-tag-item&&tag=%s" % (sys.argv[0], tag))
         control.directory_end()
+        return
 
     def browse(self):
         http_communicator = HTTPCommunicator()
         url = self.browse_url % (utils.url_root, self.tag)
+        print url
         json_data = http_communicator.get(url)
         tags = json.loads(json_data)
         for tag in tags:
             utils.add_directory("%s (%s)" % (tag['name'], tag['entries']), utils.icon_tag, utils.icon_tag,
                                 "%s?action=list-tag&tag-url=%s" % (sys.argv[0], tag['href']))
         control.directory_end()
+        return
 
     def show_list_sort(self):
         # recent
@@ -85,15 +88,20 @@ class Main:
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30703)),
                             urllib.quote_plus(self.tag_url)))
         control.directory_end()
+        return
 
     def list(self):
         http_communicator = HTTPCommunicator()
-        url = "%s%s?sort=%s&page=%i&%s" % (utils.url_root, self.tag_url, self.sort, self.current_page, utils.url_langs)
+        url = "%s%s?sort=%s&page=%i&%s" % (utils.url_root, self.tag_url, self.sort, self.current_page, utils.selected_languages())
+        print url
         html_data = http_communicator.get(url)
 
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
         ul_entries = beautiful_soup.find("ul", {"class": "entries"})
+        if ul_entries is None:
+            control.directory_end()
+            return
         li_entries = ul_entries.findAll("li")
         for li_entry in li_entries:
             utils.add_entry_video(li_entry)
@@ -103,3 +111,4 @@ class Main:
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
         control.directory_end()
+        return

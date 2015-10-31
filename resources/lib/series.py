@@ -57,6 +57,7 @@ class Main:
         utils.add_directory(control.lang(30704), utils.icon_folder, None, "%s?action=browse-series&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30704))))
         control.directory_end()
+        return
 
     def show_list_sort(self):
         # sequential
@@ -80,10 +81,11 @@ class Main:
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30703)),
                                 urllib.quote_plus(self.series_url)))
         control.directory_end()
+        return
 
     def browse(self):
         http_communicator = HTTPCommunicator()
-        url = self.browse_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.url_langs)
+        url = self.browse_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
         html_data = http_communicator.get(url)
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
@@ -98,13 +100,14 @@ class Main:
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
         control.directory_end()
+        return
 
     def list(self):
         http_communicator = HTTPCommunicator()
         url = "%s%s?sort=%s&page=%i&%s" % (
-            utils.url_root, self.series_url, self.sort, self.current_page, utils.url_langs)
+            utils.url_root, self.series_url, self.sort, self.current_page, utils.selected_languages())
         html_data = http_communicator.get(url)
-
+        print url
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
         ul_entries = beautiful_soup.find("ul", {"class": "entries"})
@@ -117,3 +120,4 @@ class Main:
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
         control.directory_end()
+        return

@@ -31,8 +31,10 @@
   <string id="30407">Live</string>
   <string id="30408">Authors</string>
   <string id="30409">Search</string>
+  <string id="30410">Settings</string>
 
   <string id="30601">#abcdefghijklmnopqrstuvwxyz</string>
+  <string id="30602">en,id,cs,da,de,et,es,fr,hr,lt,sw,lv,hu,nl,nb,uz,pl,pt,pt-br,ro,sk,sl,sr-cyrl,fi,sv,vi,tr,el,bg,ru,uk,hy,he,ur,ar,hi,th,ko,ja,zh-cn,zh-tw</string>
 
   <!-- Sorting -->
   <string id="30701">Recent</string>
@@ -46,4 +48,47 @@
   <string id="30504">Getting video location...</string>
   <string id="30505">No video stream found</string>
 
+  <string id="30801">Languages</string>
+  <!-- languages -->
+  <string id="30901">Bahasa Indonesia</string>
+  <string id="30902">Česky</string>
+  <string id="30903">Dansk</string>
+  <string id="30904">Deutsch</string>
+  <string id="30905">Eesti</string>
+  <string id="30906">English</string>
+  <string id="30907">Español</string>
+  <string id="30908">Français</string>
+  <string id="30909">Hrvatski</string>
+  <string id="30910">Italiano</string>
+  <string id="30911">Kiswahili</string>
+  <string id="30912">Latviešu</string>
+  <string id="30913">Magyar</string>
+  <string id="30914">Nederlands</string>
+  <string id="30915">Norsk</string>
+  <string id="30916">O‘zbek</string>
+  <string id="30917">Polski</string>
+  <string id="30918">Português</string>
+  <string id="30919">Português do Brasil</string>
+  <string id="30920">Română</string>
+  <string id="30921">Slovenčina</string>
+  <string id="30922">Slovenščina</string>
+  <string id="30923">Srpski</string>
+  <string id="30924">Suomi</string>
+  <string id="30925">Svenska</string>
+  <string id="30926">Tiếng việt</string>
+  <string id="30927">Türkçe</string>
+  <string id="30928">Ελληνικά</string>
+  <string id="30929">Български</string>
+  <string id="30930">Русский</string>
+  <string id="30931">Українська</string>
+  <string id="30932">Armenian</string>
+  <string id="30933">Hebrew</string>
+  <string id="30934">Urdu</string>
+  <string id="30935">Arabic</string>
+  <string id="30936">Hindi</string>
+  <string id="30937">Thai</string>
+  <string id="30938">Korean</string>
+  <string id="30939">Japanese</string>
+  <string id="30940">Simplified Chinese</string>
+  <string id="30941">Chinese (Taiwan)</string>
 </strings>

@@ -54,7 +54,7 @@ class Main:
         utils.add_directory(control.lang(30704), utils.icon_folder, None, "%s?action=browse-blogs&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30704))))
         control.directory_end()
-
+        return
 
     def show_list_sort(self):
         # recent
@@ -73,16 +73,20 @@ class Main:
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30703)),
                             urllib.quote_plus(self.blog_url)))
         control.directory_end()
-
+        return
 
     def browse(self):
         http_communicator = HTTPCommunicator()
-        url = self.browse_url % (utils.url_root, self.sort, self.current_page, utils.url_langs)
+        url = self.browse_url % (utils.url_root, self.sort, self.current_page, utils.selected_languages())
         html_data = http_communicator.get(url)
-
+        print url
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
         ul_entries = beautiful_soup.find("ul", {"class": "entries"})
+        if ul_entries is None:
+            control.directory_end()
+            return
+
         li_entries = ul_entries.findAll("li")
         for li_entry in li_entries:
             self.add_blog_directory(li_entry)
@@ -92,17 +96,19 @@ class Main:
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
         control.directory_end()
-
+        return
 
     def list(self):
         http_communicator = HTTPCommunicator()
         url = "%s%s?page=%u&sort=%s" % (utils.url_root, self.blog_url, self.current_page, self.sort)
+        print url
         html_data = http_communicator.get(url)
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
         ul_entries = beautiful_soup.find("ul", {"class": "entries"})
         if ul_entries is None:
+            control.directory_end()
             return
 
         li_entries = ul_entries.findAll("li")
@@ -114,7 +120,7 @@ class Main:
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
         control.directory_end()
-
+        return
 
     def add_blog_directory(self, entry):
         # Thumbnail...
@@ -148,3 +154,4 @@ class Main:
         list_item.setInfo("video", {"plot": plot, "title": title})
         plugin_list_show = '%s?action=list-blog&blog-url=%s' % (sys.argv[0], urllib.quote_plus(show_url))
         control.addItem(handle=int(sys.argv[1]), url=plugin_list_show, listitem=list_item, isFolder=True)
+        return

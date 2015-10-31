@@ -42,11 +42,6 @@ class Main:
         #
         # Settings
         #
-        self.video_format = __settings__.getSetting("video_format")
-        self.pref_video_format = ("High Quality",
-                                  "Medium Quality",
-                                  "Low Quality",
-                                  "Best Available")[int(self.video_format)]
         self.video_formats = ("High Quality MP4",
                               "High Quality WMV",
                               "Mid Quality MP4",
@@ -66,9 +61,6 @@ class Main:
     # Play video...
     #
     def play_video(self):
-        if (self.DEBUG):
-            print "video_page_url = " + self.video_page_url
-
         #
         # Get current list item details...
         #
@@ -115,7 +107,7 @@ class Main:
         # Play video...
         xbmc_player = xbmc.Player()
         xbmc_player.play(playlist)
-
+        return
     #
     # Get video URL
     #
