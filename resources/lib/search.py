@@ -6,6 +6,7 @@ import utils
 import json
 from HTTPCommunicator import HTTPCommunicator
 
+
 class Main:
     def __init__(self):
         # Parse parameters...
@@ -25,8 +26,8 @@ class Main:
         if self.search_query is None or self.search_query == '':
             return
 
-        base_url = "https://c9search.azurewebsites.net/content/search?text=%s&$top=25&$skip=0&$inlinecount=allpages" % (
-            urllib.quote_plus(self.search_query))
+        base_url = "https://c9search.azurewebsites.net/content/search?text=%s&$top=100&$skip=0&$inlinecount=allpages" \
+                   % (urllib.quote_plus(self.search_query))
         http_communicator = HTTPCommunicator()
         data = http_communicator.get(base_url)
 

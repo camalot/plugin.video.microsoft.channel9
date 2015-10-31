@@ -34,7 +34,7 @@ class Main:
                             "%s?action=browse-tags" % (sys.argv[0]))
         # Blogs
         utils.add_directory(control.lang(30406), "%s/blog.png" % control.imagesPath, None,
-                            "%s?action=browse-blog" % (sys.argv[0]))
+                            "%s?action=browse-blogs" % (sys.argv[0]))
         # Authors
         utils.add_directory(control.lang(30408), "%s/user.png" % control.imagesPath, None,
                             "%s?action=browse-authors" % (sys.argv[0]))

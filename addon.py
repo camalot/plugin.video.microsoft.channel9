@@ -81,11 +81,9 @@ elif action == 'browse-event':
 elif action == 'browse-live':
     import ms_channel9_browse_live as plugin
 elif action == 'list-blog':
-    import ms_channel9_list_blogs as plugin
-elif action == 'browse-blog':
-    import ms_channel9_browse_blogs as plugin
-elif action == 'browse-authors':
-    import ms_channel9_browse_authors as plugin
+    import blogs as plugin
+elif action == 'browse-blogs':
+    import blogs as plugin
 elif action == 'search':
     import search as plugin
 elif action == 'play':
