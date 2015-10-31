@@ -12,7 +12,7 @@ import xbmcplugin
 import xbmcaddon
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from HTTPCommunicator import HTTPCommunicator
+from resources.lib.libraries.HTTPCommunicator import HTTPCommunicator
 
 
 

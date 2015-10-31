@@ -5,7 +5,7 @@ import os
 import sys
 import urllib
 import HTMLParser
-
+import re
 import xbmc
 import xbmcgui
 import xbmcplugin
@@ -57,14 +57,14 @@ class Main:
 
     def show_sort(self):
         # search
-        utils.add_directory(control.lang(30409), "%s/search.png" % control.imagesPath, None,
+        utils.add_directory(control.lang(30409), utils.icon_search, None,
                             "%s?action=search-authors" % (sys.argv[0]))
         # episodes
-        utils.add_directory(control.lang(30705), "DefaultFolder.png", None,
+        utils.add_directory(control.lang(30705), utils.icon_folder, None,
                             "%s?action=browse-authors&page=%i&sort=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30705))))
         # A to Z
-        utils.add_directory(control.lang(30704), "DefaultFolder.png", None,
+        utils.add_directory(control.lang(30704), utils.icon_folder, None,
                             "%s?action=browse-authors&page=%i&sort=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30704))))
         control.directory_end()
@@ -128,6 +128,9 @@ class Main:
             return
 
         author_thumb = div_author_image['src']
+        if not re.match("^https?:", author_thumb):
+            thumbnail = "%s%s" % (utils.url_root, author_thumb)
+
         author_a = entry.find("a", {"class": "button"})
         author_link = author_a['href']
 

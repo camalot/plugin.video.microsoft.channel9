@@ -1,6 +1,7 @@
 import sys
 import urllib
 import os
+import re
 import xbmc
 import xbmcgui
 import xbmcplugin
@@ -17,11 +18,20 @@ url_langs += "lang=hi&lang=th&lang=ko&lang=ja&lang=zh-cn&lang=zh-tw"
 
 url_root = "https://channel9.msdn.com/"
 
+icon_folder = os.path.join(control.imagesPath, "folder.png")
+icon_search = os.path.join(control.imagesPath, "search.png")
+icon_next = os.path.join(control.imagesPath, "next-page.png")
+icon_tag = os.path.join(control.imagesPath, "tag.png")
+
+action_list_blog = "%s?action=list-blog&page=%i&sort=%s&blog-url=%s"
+action_list_blog2 = "%s?action=list-blog&blog-url=%s"
+
 def add_entry_video(entry):
     # Thumbnail...
     div_entry_image = entry.find("div", {"class": "entry-image"})
     thumbnail = div_entry_image.find("img", {"class": "thumb"})["src"]
-
+    if not re.match("^https?:", thumbnail):
+            thumbnail = "%s%s" % (url_root, thumbnail)
     # Title
     div_entry_meta = entry.find("div", {"class": "entry-meta"})
     a_title = div_entry_meta.find("a", {"class": "title"})
@@ -32,8 +42,12 @@ def add_entry_video(entry):
 
     # Genre (date)...
     div_data = div_entry_meta.find("div", {"class": "data"})
-    span_class_date = div_data.find("span", {"class": "date"})
-    genre = span_class_date.string
+
+    if div_data is None:
+        genre = "none"
+    else:
+        span_class_date = div_data.find("span", {"class": "date"})
+        genre = span_class_date.string
 
     # Plot
     div_description = div_entry_meta.find("div", {"class": "description"})
@@ -49,8 +63,7 @@ def add_entry_video(entry):
 def add_next_page(bs, item_url, page):
     ul_paging = bs.find("ul", {"class": "paging"})
     if ul_paging is not None:
-        list_item = control.item(control.lang(30503) % page, iconImage="DefaultFolder.png",
-                                 thumbnailImage=os.path.join(control.imagesPath, 'next-page.png'))
+        list_item = control.item(control.lang(30503) % page, iconImage=icon_next, thumbnailImage=icon_next)
         control.addItem(handle=int(sys.argv[1]), url=item_url, listitem=list_item, isFolder=True)
 
 

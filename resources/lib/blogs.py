@@ -48,30 +48,30 @@ class Main:
 
     def show_sort(self):
         # recent
-        utils.add_directory(control.lang(30701), "DefaultFolder.png", None, "%s?action=browse-blogs&page=%i&sort=%s" % (
+        utils.add_directory(control.lang(30701), utils.icon_folder, None, "%s?action=browse-blogs&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30701))))
         # A to Z
-        utils.add_directory(control.lang(30704), "DefaultFolder.png", None, "%s?action=browse-blogs&page=%i&sort=%s" % (
+        utils.add_directory(control.lang(30704), utils.icon_folder, None, "%s?action=browse-blogs&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30704))))
         control.directory_end()
 
 
     def show_list_sort(self):
         # recent
-        utils.add_directory(control.lang(30701), "DefaultFolder.png", None,
-                            "%s?action=list-blog&page=%i&sort=%s&blog-url=%s" % (
+        utils.add_directory(control.lang(30701), utils.icon_folder, None,
+                            utils.action_list_blog % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30701)),
-                            urllib.quote_plus(self.show_url)))
+                            urllib.quote_plus(self.blog_url)))
         # viewed
-        utils.add_directory(control.lang(30702), "DefaultFolder.png", None,
-                            "%s?action=list-blog&page=%i&sort=%s&blog-url=%s" % (
+        utils.add_directory(control.lang(30702), utils.icon_folder, None,
+                            utils.action_list_blog % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30702)),
-                            urllib.quote_plus(self.show_url)))
+                            urllib.quote_plus(self.blog_url)))
         # rating
-        utils.add_directory(control.lang(30703), "DefaultFolder.png", None,
-                            "%s?action=list-blog&page=%i&sort=%s&blog-url=%s" % (
+        utils.add_directory(control.lang(30703), utils.icon_folder, None,
+                            utils.action_list_blog % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30703)),
-                            urllib.quote_plus(self.show_url)))
+                            urllib.quote_plus(self.blog_url)))
         control.directory_end()
 
 
@@ -95,8 +95,26 @@ class Main:
 
 
     def list(self):
-        print "list: %s" % self.blog_url
-        return
+        http_communicator = HTTPCommunicator()
+        url = "%s%s?page=%u&sort=%s" % (utils.url_root, self.blog_url, self.current_page, self.sort)
+        html_data = http_communicator.get(url)
+        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
+
+        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
+        if ul_entries is None:
+            return
+
+        li_entries = ul_entries.findAll("li")
+        for li_entry in li_entries:
+            utils.add_entry_video(li_entry)
+
+        next_url = "%s?action=list-blog&page=%i&sort=%s" % (
+            sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
+        utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
+
+        control.directory_end()
+
 
     def add_blog_directory(self, entry):
         # Thumbnail...
@@ -125,8 +143,8 @@ class Main:
         show_url = a_title["href"]
 
         # Add to list...
-        list_item = control.item(title, iconImage="DefaultFolder.png", thumbnailImage=thumbnail)
+        list_item = control.item(title, iconImage=utils.icon_folder, thumbnailImage=thumbnail)
         list_item.setArt({"thumb": thumbnail, "fanart": thumbnail, "landscape": thumbnail, "poster": thumbnail})
         list_item.setInfo("video", {"plot": plot, "title": title})
-        plugin_list_show = '%s?action=list-show&show-url=%s' % (sys.argv[0], urllib.quote_plus(show_url))
+        plugin_list_show = '%s?action=list-blog&blog-url=%s' % (sys.argv[0], urllib.quote_plus(show_url))
         control.addItem(handle=int(sys.argv[1]), url=plugin_list_show, listitem=list_item, isFolder=True)

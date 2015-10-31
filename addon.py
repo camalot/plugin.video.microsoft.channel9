@@ -61,11 +61,11 @@ elif action == 'search-authors':
 elif action == 'list-author':
     import authors as plugin
 elif action == 'browse-tags':
-    import ms_channel9_browse_tags as plugin
+    import tags as plugin
 elif action == 'browse-tag-item':
-    import ms_channel9_browse_tag_item as plugin
+    import tags as plugin
 elif action == 'list-tag':
-    import ms_channel9_list_tag as plugin
+    import tags as plugin
 elif action == 'browse-shows':
     import shows as plugin
 elif action == 'list-show':

@@ -36,13 +36,13 @@ class Main:
 
     def browse(self):
         # recent
-        utils.add_directory(control.lang(30701), "DefaultFolder.png", None, "%s?action=list-all&page=%i&sort=%s" % (
+        utils.add_directory(control.lang(30701), utils.icon_folder, None, "%s?action=list-all&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30701))))
         # viewed
-        utils.add_directory(control.lang(30702), "DefaultFolder.png", None, "%s?action=list-all&page=%i&sort=%s" % (
+        utils.add_directory(control.lang(30702), utils.icon_folder, None, "%s?action=list-all&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30702))))
         # rating
-        utils.add_directory(control.lang(30703), "DefaultFolder.png", None, "%s?action=list-all&page=%i&sort=%s" % (
+        utils.add_directory(control.lang(30703), utils.icon_folder, None, "%s?action=list-all&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30703))))
 
         control.directory_end()

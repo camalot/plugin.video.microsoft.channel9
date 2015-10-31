@@ -3,7 +3,7 @@
 
 import sys
 import urllib
-
+import re
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
 from HTTPCommunicator import HTTPCommunicator
@@ -49,26 +49,26 @@ class Main:
 
     def show_sort(self):
         # recent
-        utils.add_directory(control.lang(30701), "DefaultFolder.png", None, "%s?action=browse-shows&page=%i&sort=%s" % (
+        utils.add_directory(control.lang(30701), utils.icon_folder, None, "%s?action=browse-shows&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30701))))
         # A to Z
-        utils.add_directory(control.lang(30704), "DefaultFolder.png", None, "%s?action=browse-shows&page=%i&sort=%s" % (
+        utils.add_directory(control.lang(30704), utils.icon_folder, None, "%s?action=browse-shows&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30704))))
         control.directory_end()
 
     def show_list_sort(self):
         # recent
-        utils.add_directory(control.lang(30701), "DefaultFolder.png", None,
+        utils.add_directory(control.lang(30701), utils.icon_folder, None,
                             "%s?action=list-show&page=%i&sort=%s&show-url=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30701)),
                             urllib.quote_plus(self.show_url)))
         # viewed
-        utils.add_directory(control.lang(30702), "DefaultFolder.png", None,
+        utils.add_directory(control.lang(30702), utils.icon_folder, None,
                             "%s?action=list-show&page=%i&sort=%s&show-url=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30702)),
                             urllib.quote_plus(self.show_url)))
         # rating
-        utils.add_directory(control.lang(30703), "DefaultFolder.png", None,
+        utils.add_directory(control.lang(30703), utils.icon_folder, None,
                             "%s?action=list-show&page=%i&sort=%s&show-url=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30703)),
                             urllib.quote_plus(self.show_url)))
@@ -114,6 +114,8 @@ class Main:
         # Thumbnail...
         div_entry_image = entry.find("div", {"class": "entry-image"})
         thumbnail = div_entry_image.find("img", {"class": "thumb"})["src"]
+        if not re.match("^https?:", thumbnail):
+            thumbnail = "%s%s" % (utils.url_root, thumbnail)
 
         # Title
         div_entry_meta = entry.find("div", {"class": "entry-meta"})
@@ -124,7 +126,7 @@ class Main:
         show_url = a_title["href"]
 
         # Add to list...
-        list_item = control.item(title, iconImage="DefaultFolder.png", thumbnailImage=thumbnail)
+        list_item = control.item(title, iconImage=utils.icon_folder, thumbnailImage=thumbnail)
         list_item.setArt({"thumb": thumbnail, "fanart": thumbnail, "landscape": thumbnail, "poster": thumbnail})
         plugin_list_show = '%s?action=list-show&show-url=%s' % (sys.argv[0], urllib.quote_plus(show_url))
         control.addItem(handle=int(sys.argv[1]), url=plugin_list_show, listitem=list_item, isFolder=True)
