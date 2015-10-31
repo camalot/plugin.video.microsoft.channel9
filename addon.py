@@ -71,9 +71,9 @@ elif action == 'browse-shows':
 elif action == 'list-show':
     import shows  as plugin
 elif action == 'browse-series':
-    import ms_channel9_browse_series as plugin
+    import series as plugin
 elif action == 'list-series':
-    import ms_channel9_list_series as plugin
+    import series as plugin
 elif action == 'list-event':
     import ms_channel9_list_events as plugin
 elif action == 'browse-event':

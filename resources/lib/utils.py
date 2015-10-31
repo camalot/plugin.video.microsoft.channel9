@@ -26,12 +26,13 @@ icon_tag = os.path.join(control.imagesPath, "tag.png")
 action_list_blog = "%s?action=list-blog&page=%i&sort=%s&blog-url=%s"
 action_list_blog2 = "%s?action=list-blog&blog-url=%s"
 
+
 def add_entry_video(entry):
     # Thumbnail...
     div_entry_image = entry.find("div", {"class": "entry-image"})
     thumbnail = div_entry_image.find("img", {"class": "thumb"})["src"]
     if not re.match("^https?:", thumbnail):
-            thumbnail = "%s%s" % (url_root, thumbnail)
+        thumbnail = "%s%s" % (url_root, thumbnail)
     # Title
     div_entry_meta = entry.find("div", {"class": "entry-meta"})
     a_title = div_entry_meta.find("a", {"class": "title"})
@@ -73,10 +74,32 @@ def add_directory(text, icon, thumbnail, url):
     control.addItem(handle=int(sys.argv[1]), url=url, listitem=list_item, isFolder=True)
 
 
+def add_show_directory(entry, action_url):
+    # Thumbnail...
+    div_entry_image = entry.find("div", {"class": "entry-image"})
+    thumbnail = div_entry_image.find("img", {"class": "thumb"})["src"]
+    if not re.match("^https?:", thumbnail):
+        thumbnail = "%s%s" % (url_root, thumbnail)
+
+    # Title
+    div_entry_meta = entry.find("div", {"class": "entry-meta"})
+    a_title = div_entry_meta.find("a", {"class": "title"})
+    title = a_title.string
+
+    # Show page URL
+    show_url = a_title["href"]
+
+    # Add to list...
+    list_item = control.item(title, iconImage=icon_folder, thumbnailImage=thumbnail)
+    list_item.setArt({"thumb": thumbnail, "fanart": thumbnail, "landscape": thumbnail, "poster": thumbnail})
+    control.addItem(handle=int(sys.argv[1]), url=action_url % urllib.quote_plus(show_url), listitem=list_item, isFolder=True)
+
+
 def set_no_sort():
     control.sort(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_NONE)
 
-def get_banner( url):
+
+def get_banner(url):
     http_communicator = HTTPCommunicator()
     html_data = http_communicator.get(url)
     soup_strainer = SoupStrainer("head")

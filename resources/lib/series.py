@@ -19,12 +19,12 @@ class Main:
         self.action = params.get("action", None)
         # self.sort_method = params.get("sort", control.infoLabel("Container.SortMethod"))
         self.sort_method = urllib.unquote_plus(params.get("sort", "NONE"))
-        self.show_url = urllib.unquote_plus(params.get("show-url", ""))
-        self.browse_url = "%s/Browse/Shows?sort=%s&page=%i&%s"
+        self.series_url = urllib.unquote_plus(params.get("series-url", ""))
+        self.browse_url = "%s/Browse/Series?sort=%s&page=%i&%s"
 
         utils.set_no_sort()
 
-        if self.action is None or self.action == "browse-shows":
+        if self.action is None or self.action == "browse-series":
             if self.sort_method == control.lang(30701):  # recent
                 self.sort = "recent"
             elif self.sort_method == control.lang(30704):  # AtoZ
@@ -33,61 +33,67 @@ class Main:
                 self.show_sort()
                 return
             self.browse()
-        elif self.action == "list-show" and self.show_url != "":
+        elif self.action == "list-series" and self.series_url != "":
             if self.sort_method == control.lang(30701):  # recent
                 self.sort = "recent"
             elif self.sort_method == control.lang(30702):  # viewed
                 self.sort = "viewed"
             elif self.sort_method == control.lang(30703):  # rating
                 self.sort = "rating"
+            elif self.sort_method == control.lang(30706):  # sequential
+                self.sort = ""
             else:
                 self.show_list_sort()
                 return
             self.list()
-        print "fail: action=%s&show-url=%s" % (self.action, self.show_url)
+        print "fail: action=%s&series-url=%s" % (self.action, self.series_url)
         return
 
     def show_sort(self):
         # recent
-        utils.add_directory(control.lang(30701), utils.icon_folder, None, "%s?action=browse-shows&page=%i&sort=%s" % (
+        utils.add_directory(control.lang(30701), utils.icon_folder, None, "%s?action=browse-series&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30701))))
         # A to Z
-        utils.add_directory(control.lang(30704), utils.icon_folder, None, "%s?action=browse-shows&page=%i&sort=%s" % (
+        utils.add_directory(control.lang(30704), utils.icon_folder, None, "%s?action=browse-series&page=%i&sort=%s" % (
             sys.argv[0], 1, urllib.quote_plus(control.lang(30704))))
         control.directory_end()
 
     def show_list_sort(self):
+        # sequential
+        utils.add_directory(control.lang(30706), utils.icon_folder, None,
+                            "%s?action=list-series&page=%i&sort=%s&series-url=%s" % (
+                                sys.argv[0], 1, urllib.quote_plus(control.lang(30706)),
+                                urllib.quote_plus(self.series_url)))
         # recent
         utils.add_directory(control.lang(30701), utils.icon_folder, None,
-                            "%s?action=list-show&page=%i&sort=%s&show-url=%s" % (
+                            "%s?action=list-series&page=%i&sort=%s&series-url=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30701)),
-                            urllib.quote_plus(self.show_url)))
+                                urllib.quote_plus(self.series_url)))
         # viewed
         utils.add_directory(control.lang(30702), utils.icon_folder, None,
-                            "%s?action=list-show&page=%i&sort=%s&show-url=%s" % (
+                            "%s?action=list-series&page=%i&sort=%s&series-url=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30702)),
-                            urllib.quote_plus(self.show_url)))
+                                urllib.quote_plus(self.series_url)))
         # rating
         utils.add_directory(control.lang(30703), utils.icon_folder, None,
-                            "%s?action=list-show&page=%i&sort=%s&show-url=%s" % (
+                            "%s?action=list-series&page=%i&sort=%s&series-url=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30703)),
-                            urllib.quote_plus(self.show_url)))
+                                urllib.quote_plus(self.series_url)))
         control.directory_end()
 
     def browse(self):
         http_communicator = HTTPCommunicator()
         url = self.browse_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.url_langs)
         html_data = http_communicator.get(url)
-
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
         ul_entries = beautiful_soup.find("ul", {"class": "entries"})
         li_entries = ul_entries.findAll("li")
         for li_entry in li_entries:
-            action_url = ("%s?action=list-show&show-url=" % (sys.argv[0])) + "%s"
+            action_url = ("%s?action=list-series&series-url=" % (sys.argv[0])) + "%s"
             utils.add_show_directory(li_entry, action_url)
 
-        next_url = "%s?action=browse-shows&page=%i&sort=%s" % (
+        next_url = "%s?action=browse-series&page=%i&sort=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
@@ -95,7 +101,8 @@ class Main:
 
     def list(self):
         http_communicator = HTTPCommunicator()
-        url = "%s%s?sort=%s&page=%i&%s" % (utils.url_root, self.show_url, self.sort, self.current_page, utils.url_langs)
+        url = "%s%s?sort=%s&page=%i&%s" % (
+            utils.url_root, self.series_url, self.sort, self.current_page, utils.url_langs)
         html_data = http_communicator.get(url)
 
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
@@ -105,11 +112,8 @@ class Main:
         for li_entry in li_entries:
             utils.add_entry_video(li_entry)
 
-        next_url = "%s?action=list-show&page=%i&sort=%s&show-url=%s" % (
-            sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method), urllib.quote_plus(self.show_url))
+        next_url = "%s?action=list-series&page=%i&sort=%s&series-url=%s" % (
+            sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method), urllib.quote_plus(self.series_url))
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
         control.directory_end()
-
-
-
