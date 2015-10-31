@@ -11,6 +11,7 @@
 #
 # Credits:
 #   * Team XBMC                                                         [http://xbmc.org/]
+#   * Team Kodi                                                         [http://kodi.tv/]
 #   * The Channel 9 Team @ Microsoft                                    [http://channel9.msdn.com/About]
 #   * Leonard Richardson <leonardr@segfault.org> - BeautifulSoup 3.0.7a [http://www.crummy.com/software/BeautifulSoup/]
 #   * Dan Dar3                                                          [http://dandar3.blogspot.com]
@@ -59,7 +60,7 @@ elif action == 'list-tag':
 elif action == 'browse-shows':
     import shows as plugin
 elif action == 'list-show':
-    import shows  as plugin
+    import shows as plugin
 elif action == 'browse-series':
     import series as plugin
 elif action == 'list-series':

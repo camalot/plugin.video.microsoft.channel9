@@ -1,10 +1,12 @@
 v2.0 (10/29/2015):
  - Added Events
  - Added Blogs
- - Re-added Tags
+ - Added Tags
  - Added Search
  - Added Authors
  - Added Live Events
+ - Added Author Search
+ - Added different language support
 
 v1.0 (Sunday, 22 May 2011):
  - initial release;
