@@ -3,7 +3,6 @@
 
 import sys
 import urllib
-import HTMLParser
 
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
@@ -126,5 +125,7 @@ class Main:
 
         # Add to list...
         list_item = control.item(title, iconImage="DefaultFolder.png", thumbnailImage=thumbnail)
+        list_item.setArt({"thumb": thumbnail, "fanart": thumbnail, "landscape": thumbnail, "poster": thumbnail})
         plugin_list_show = '%s?action=list-show&show-url=%s' % (sys.argv[0], urllib.quote_plus(show_url))
         control.addItem(handle=int(sys.argv[1]), url=plugin_list_show, listitem=list_item, isFolder=True)
+

@@ -45,6 +45,7 @@ class Main:
             self.browse()
             return
         elif self.action == "search-authors":
+            self.sort = ""
             self.search()
             return
         elif self.action == "list-author" and self.author_url != "":
@@ -55,6 +56,9 @@ class Main:
         return
 
     def show_sort(self):
+        # search
+        utils.add_directory(control.lang(30409), "%s/search.png" % control.imagesPath, None,
+                            "%s?action=search-authors" % (sys.argv[0]))
         # episodes
         utils.add_directory(control.lang(30705), "DefaultFolder.png", None,
                             "%s?action=browse-authors&page=%i&sort=%s" % (
@@ -78,8 +82,10 @@ class Main:
         for li_entry in li_entries:
             self.add_author_directory(li_entry)
 
-        next_url = "%s?action=browse-authors&page=%i&sort=%s" % (
-            sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
+        auth_action = "browse-authors" if self.search_term == "" else "search-authors"
+        next_url = "%s?action=%s&page=%i&sort=%s&query=%s" % (
+            sys.argv[0], auth_action, self.current_page + 1, urllib.quote_plus(self.sort_method),
+            urllib.quote_plus(self.search_term))
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
         control.directory_end()
@@ -104,8 +110,16 @@ class Main:
         control.directory_end()
 
     def search(self):
+        if self.search_term is None or self.search_term == '':
+            t = control.lang(30201).encode('utf-8')
+            k = control.keyboard('', t)
+            k.doModal()
+            self.search_term = k.getText() if k.isConfirmed() else None
 
-        return
+        if self.search_term is None or self.search_term == '':
+            return
+
+        self.browse()
 
     def add_author_directory(self, entry):
         html_parser = HTMLParser.HTMLParser()

@@ -6,6 +6,9 @@ import xbmcgui
 import xbmcplugin
 import xbmcaddon
 import control
+from BeautifulSoup import SoupStrainer
+from BeautifulSoup import BeautifulSoup
+from HTTPCommunicator import HTTPCommunicator
 
 url_langs = "lang=id&lang=cs&lang=da&lang=de&lang=et&lang=en&lang=es&lang=fr&lang=hr&lang=it&lang=sw&lang=lv&"
 url_langs += "lang=hu&lang=nl&lang=nb&lang=uz&lang=pl&lang=pt&lang=pt-br&lang=ro&lang=sk&lang=sl&lang=sr-cyrl&"
@@ -38,6 +41,7 @@ def add_entry_video(entry):
 
     list_item = control.item(title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
     list_item.setInfo("video", {"Title": title, "Studio": "Microsoft Channel 9", "Plot": plot, "Genre": genre})
+    list_item.setArt({"thumb": thumbnail, "fanart": thumbnail, "landscape": thumbnail, "poster": thumbnail})
     plugin_play_url = '%s?action=play&video_page_url=%s' % (sys.argv[0], urllib.quote_plus(video_page_url))
     control.addItem(handle=int(sys.argv[1]), url=plugin_play_url, listitem=list_item, isFolder=False)
 
@@ -52,8 +56,21 @@ def add_next_page(bs, item_url, page):
 
 def add_directory(text, icon, thumbnail, url):
     list_item = xbmcgui.ListItem(text, iconImage=icon, thumbnailImage=thumbnail)
+    list_item.setArt({"thumb": thumbnail, "fanart": thumbnail, "landscape": thumbnail, "poster": thumbnail})
     control.addItem(handle=int(sys.argv[1]), url=url, listitem=list_item, isFolder=True)
 
 
 def set_no_sort():
     control.sort(handle=int(sys.argv[1]), sortMethod=xbmcplugin.SORT_METHOD_NONE)
+
+def get_banner( url):
+    http_communicator = HTTPCommunicator()
+    html_data = http_communicator.get(url)
+    soup_strainer = SoupStrainer("head")
+    beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
+
+    banner = beautiful_soup.find("meta", {"name": "msapplication-square310x310logo"})
+    if banner is not None:
+        return banner["content"]
+    else:
+        return None
