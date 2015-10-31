@@ -53,9 +53,13 @@ if action is None:
     import ms_channel9_main as plugin
 
 if action == 'list-all':
-    import ms_channel9_list_all as plugin
+    import all_content as plugin
 elif action == 'browse-authors':
-    import ms_channel9_browse_authors as plugin
+    import authors as plugin
+elif action == 'search-authors':
+    import authors as plugin
+elif action == 'list-author':
+    import authors as plugin
 elif action == 'browse-tags':
     import ms_channel9_browse_tags as plugin
 elif action == 'browse-tag-item':
@@ -63,9 +67,9 @@ elif action == 'browse-tag-item':
 elif action == 'list-tag':
     import ms_channel9_list_tag as plugin
 elif action == 'browse-shows':
-    import ms_channel9_browse_shows as plugin
+    import shows as plugin
 elif action == 'list-show':
-    import ms_channel9_list_show as plugin
+    import shows  as plugin
 elif action == 'browse-series':
     import ms_channel9_browse_series as plugin
 elif action == 'list-series':
@@ -82,8 +86,6 @@ elif action == 'browse-blog':
     import ms_channel9_browse_blogs as plugin
 elif action == 'browse-authors':
     import ms_channel9_browse_authors as plugin
-elif action == 'list-author':
-    import ms_channel9_list_author as plugin
 elif action == 'search':
     import search as plugin
 elif action == 'play':

@@ -13,6 +13,8 @@ item = xbmcgui.ListItem
 
 directory = xbmcplugin.endOfDirectory
 
+sort = xbmcplugin.addSortMethod
+
 content = xbmcplugin.setContent
 
 property = xbmcplugin.setProperty
@@ -66,6 +68,8 @@ skinPath = xbmc.translatePath('special://skin/')
 addonPath = xbmc.translatePath(addonInfo('path'))
 
 dataPath = xbmc.translatePath(addonInfo('profile')).decode('utf-8')
+
+imagesPath = xbmc.translatePath(os.path.join(addonPath, 'resources', 'images'))
 
 settingsFile = os.path.join(dataPath, 'settings.xml')
 

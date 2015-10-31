@@ -34,7 +34,14 @@
 
   <string id="30601">#abcdefghijklmnopqrstuvwxyz</string>
 
-  <string id="30503">Next page</string>  
+  <!-- Sorting -->
+  <string id="30701">Recent</string>
+  <string id="30702">Most Viewed</string>
+  <string id="30703">Top Rated</string>
+  <string id="30704">A to Z</string>
+  <string id="30705">Episodes</string>
+
+  <string id="30503">Page %i</string>
   <string id="30504">Getting video location...</string>
   <string id="30505">No video stream found</string>
 
