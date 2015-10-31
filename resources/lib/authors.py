@@ -19,11 +19,8 @@ import utils
 
 class Main:
     def __init__(self):
-        # Constants
-        self.DEBUG = False
-        self.IMAGES_PATH = control.imagesPath
-
         # Parse parameters...
+        print "args: %s" % sys.argv
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
         self.current_page = int(params.get("page", "1"))
         self.action = params.get("action", None)
@@ -89,10 +86,13 @@ class Main:
         for li_entry in li_entries:
             self.add_author_directory(li_entry)
 
-        auth_action = "browse-authors" if self.search_term == "" else "search-authors"
-        next_url = "%s?action=%s&page=%i&sort=%s&query=%s" % (
-            sys.argv[0], auth_action, self.current_page + 1, urllib.quote_plus(self.sort_method),
-            urllib.quote_plus(self.search_term))
+        if self.search_term == "":
+            next_url = "%s?action=browse-authors&page=%i&sort=%s" % (
+                sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
+        else:
+            next_url = "%s?action=search-authors&page=%i&query=%s" % (
+                sys.argv[0], self.current_page + 1, urllib.quote_plus(self.search_term))
+        print next_url
         utils.add_next_page(beautiful_soup, next_url, self.current_page + 1)
 
         control.directory_end()
