@@ -14,4 +14,18 @@ Supports the following:
 - Authors
 - Search
 
+Choose how to browse
+[![home][2]][5]
+
 Choose to show videos based on selected languages.
+[![languages][1]][4]
+
+Browse the different episodes
+[![home][3]][6]
+
+[1]: http://i.imgur.com/ZuLpUFQl.jpg
+[2]: http://i.imgur.com/fQuA6Bvl.jpg
+[3]: http://i.imgur.com/xWzuSh5l.jpg
+[4]: http://i.imgur.com/ZuLpUFQ.jpg
+[5]: http://i.imgur.com/fQuA6Bv.jpg
+[6]: http://i.imgur.com/xWzuSh5.jpg
