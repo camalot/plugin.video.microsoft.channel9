@@ -14,13 +14,16 @@ Supports the following:
 - Authors
 - Search
 
-Choose how to browse
+Choose how to browse.
+
 [![home][2]][5]
 
 Choose to show videos based on selected languages.
+
 [![languages][1]][4]
 
-Browse the different episodes
+Browse the different episodes.
+
 [![home][3]][6]
 
 [1]: http://i.imgur.com/ZuLpUFQl.jpg
