@@ -6,7 +6,7 @@ import urllib
 import re
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from HTTPCommunicator import HTTPCommunicator
+import http_request
 import control
 import utils
 import json
@@ -60,10 +60,8 @@ class Main:
         return
 
     def browse(self):
-        http_communicator = HTTPCommunicator()
         url = self.browse_url % (utils.url_root, self.tag)
-        print url
-        json_data = http_communicator.get(url)
+        json_data = http_request.get(url)
         tags = json.loads(json_data)
         for tag in tags:
             utils.add_directory("%s (%s)" % (tag['name'], tag['entries']), utils.icon_tag, utils.icon_tag,
@@ -76,25 +74,24 @@ class Main:
         utils.add_directory(control.lang(30701), utils.icon_folder, None,
                             "%s?action=list-tag&page=%i&sort=%s&tag-url=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30701)),
-                            urllib.quote_plus(self.tag_url)))
+                                urllib.quote_plus(self.tag_url)))
         # viewed
         utils.add_directory(control.lang(30702), utils.icon_folder, None,
                             "%s?action=list-tag&page=%i&sort=%s&tag-url=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30702)),
-                            urllib.quote_plus(self.tag_url)))
+                                urllib.quote_plus(self.tag_url)))
         # rating
         utils.add_directory(control.lang(30703), utils.icon_folder, None,
                             "%s?action=list-tag&page=%i&sort=%s&tag-url=%s" % (
                                 sys.argv[0], 1, urllib.quote_plus(control.lang(30703)),
-                            urllib.quote_plus(self.tag_url)))
+                                urllib.quote_plus(self.tag_url)))
         control.directory_end()
         return
 
     def list(self):
-        http_communicator = HTTPCommunicator()
-        url = "%s%s?sort=%s&page=%i&%s" % (utils.url_root, self.tag_url, self.sort, self.current_page, utils.selected_languages())
-        print url
-        html_data = http_communicator.get(url)
+        url = "%s%s?sort=%s&page=%i&%s" % (
+        utils.url_root, self.tag_url, self.sort, self.current_page, utils.selected_languages())
+        html_data = http_request.get(url)
 
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)

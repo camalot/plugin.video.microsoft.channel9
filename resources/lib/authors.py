@@ -12,7 +12,7 @@ import xbmcplugin
 import xbmcaddon
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from HTTPCommunicator import HTTPCommunicator
+import http_request
 import control
 import utils
 
@@ -20,7 +20,6 @@ import utils
 class Main:
     def __init__(self):
         # Parse parameters...
-        print "args: %s" % sys.argv
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
         self.current_page = int(params.get("page", "1"))
         self.action = params.get("action", None)
@@ -68,12 +67,10 @@ class Main:
         return
 
     def browse(self):
-        http_communicator = HTTPCommunicator()
         url = self.browse_url % (
             utils.url_root, urllib.quote_plus(self.sort), self.current_page, urllib.quote_plus(self.search_term),
             utils.selected_languages())
-        print url
-        html_data = http_communicator.get(url)
+        html_data = http_request.get(url)
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
         ul_authors = beautiful_soup.find("ul", {"class": "authors"})
@@ -99,11 +96,9 @@ class Main:
         return
 
     def list(self):
-        http_communicator = HTTPCommunicator()
         url = "%s/%s/posts?page=%u&%s" % (
             utils.url_root, self.author_url, self.current_page, utils.selected_languages())
-        print url
-        html_data = http_communicator.get(url)
+        html_data = http_request.get(url)
         soup_strainer = SoupStrainer("div", {"class": "user-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
 

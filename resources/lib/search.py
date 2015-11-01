@@ -4,21 +4,21 @@ import control
 import urllib
 import utils
 import json
-from HTTPCommunicator import HTTPCommunicator
+import http_request
 
 
 class Main:
     def __init__(self):
         # Parse parameters...
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
-        self.search_query = params.get("query", None)
+        self.search_query = params.get("query", '')
         self.search()
 
         utils.set_no_sort()
         return
 
     def search(self):
-        if self.search_query is None:
+        if self.search_query is None or self.search_query == '':
             t = control.lang(30201).encode('utf-8')
             k = control.keyboard('', t)
             k.doModal()
@@ -29,9 +29,7 @@ class Main:
 
         base_url = "https://c9search.azurewebsites.net/content/search?text=%s&$top=100&$skip=0&$inlinecount=allpages" \
                    % (urllib.quote_plus(self.search_query))
-        http_communicator = HTTPCommunicator()
-        data = http_communicator.get(base_url)
-        print base_url
+        data = http_request.get(base_url)
         start_index = data.index('"documents":') + 12
         if start_index <= 12:
             return

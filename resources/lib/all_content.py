@@ -7,7 +7,7 @@ import urllib
 
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from HTTPCommunicator import HTTPCommunicator
+import http_request
 import control
 import utils
 
@@ -50,10 +50,8 @@ class Main:
         return
 
     def get_entries(self):
-        http_communicator = HTTPCommunicator()
         url = self.url % (urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
-        print url
-        html_data = http_communicator.get(url)
+        html_data = http_request.get(url)
 
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)

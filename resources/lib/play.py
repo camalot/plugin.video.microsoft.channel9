@@ -1,6 +1,3 @@
-#
-# Imports
-#
 import sys
 import urllib
 import re
@@ -9,39 +6,15 @@ import xbmcgui
 import xbmcaddon
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from HTTPCommunicator import HTTPCommunicator
+import http_request
+import control
+import utils
 
 
-
-#
-# Constants
-# 
-__settings__ = xbmcaddon.Addon()
-__language__ = __settings__.getLocalizedString
-
-
-#
-# Main class
-#
 class Main:
-    #
-    # Init
-    #
     def __init__(self):
-        #
-        # Constants
-        #
-        self.DEBUG = False
-
-        #
-        # Parse parameters...
-        #
         params = dict(part.split('=') for part in sys.argv[2][1:].split('&'))
-
         self.video_page_url = urllib.unquote_plus(params["video_page_url"])
-        #
-        # Settings
-        #
         self.video_formats = ("High Quality MP4",
                               "High Quality WMV",
                               "Mid Quality MP4",
@@ -52,33 +25,21 @@ class Main:
                               "Low Quality WMV",
                               "MP4"
                               "MP3")
-        #
-        # Play video...
-        #
         self.play_video()
 
-    #
-    # Play video...
-    #
     def play_video(self):
-        #
         # Get current list item details...
-        #
         title = unicode(xbmc.getInfoLabel("ListItem.Title"), "utf-8")
         thumbnail = xbmc.getInfoImage("ListItem.Thumb")
         studio = unicode(xbmc.getInfoLabel("ListItem.Studio"), "utf-8")
         plot = unicode(xbmc.getInfoLabel("ListItem.Plot"), "utf-8")
         genre = unicode(xbmc.getInfoLabel("ListItem.Genre"), "utf-8")
 
-        #
         # Show wait dialog while parsing data...
-        #
         dialog_wait = xbmcgui.DialogProgress()
-        dialog_wait.create(__language__(30504), title)
+        dialog_wait.create(control.lang(30504), title)
 
-        #
         # Get video URL...
-        #
         video_url = self.get_video_url(self.video_page_url)
 
         if video_url is None:
@@ -87,12 +48,10 @@ class Main:
             del dialog_wait
 
             # Message...
-            xbmcgui.Dialog().ok(__language__(30000), __language__(30505))
+            xbmcgui.Dialog().ok(control.lang(30000), control.lang(30505))
             return
 
-        #
         # Play video...
-        #
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
 
@@ -108,22 +67,15 @@ class Main:
         xbmc_player = xbmc.Player()
         xbmc_player.play(playlist)
         return
-    #
+
     # Get video URL
-    #
     def get_video_url(self, video_page_url):
-        # 
         # Get HTML page...
-        #
         if not re.match('^https?:', self.video_page_url):
-            video_page_url = "http://channel9.msdn.com%s" % video_page_url
+            video_page_url = "%s%s" % (utils.url_root, video_page_url)
 
-        http_communicator = HTTPCommunicator()
-        html_data = http_communicator.get(video_page_url)
-
-        #                
+        html_data = http_request.get(video_page_url)
         # Parse HTML response...
-        #
         soup_strainer = SoupStrainer("ul", {"class": "download"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer)
 

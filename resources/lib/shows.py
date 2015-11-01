@@ -6,7 +6,7 @@ import urllib
 import re
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from HTTPCommunicator import HTTPCommunicator
+import http_request
 import control
 import utils
 
@@ -77,10 +77,8 @@ class Main:
         return
 
     def browse(self):
-        http_communicator = HTTPCommunicator()
         url = self.browse_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
-        html_data = http_communicator.get(url)
-        print url
+        html_data = http_request.get(url)
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
         ul_entries = beautiful_soup.find("ul", {"class": "entries"})
@@ -101,10 +99,8 @@ class Main:
         return
 
     def list(self):
-        http_communicator = HTTPCommunicator()
         url = "%s%s?sort=%s&page=%i&%s" % (utils.url_root, self.show_url, self.sort, self.current_page, utils.selected_languages())
-        html_data = http_communicator.get(url)
-        print url
+        html_data = http_request.get(url)
         soup_strainer = SoupStrainer("div", {"class": "tab-content"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
         ul_entries = beautiful_soup.find("ul", {"class": "entries"})

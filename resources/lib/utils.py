@@ -9,7 +9,7 @@ import xbmcaddon
 import control
 from BeautifulSoup import SoupStrainer
 from BeautifulSoup import BeautifulSoup
-from HTTPCommunicator import HTTPCommunicator
+import http_request
 
 # url_langs = "lang=id&lang=cs&lang=da&lang=de&lang=et&lang=en&lang=es&lang=fr&lang=hr&lang=it&lang=sw&lang=lv&"
 # url_langs += "lang=hu&lang=nl&lang=nb&lang=uz&lang=pl&lang=pt&lang=pt-br&lang=ro&lang=sk&lang=sl&lang=sr-cyrl&"
@@ -128,8 +128,7 @@ def set_no_sort():
 
 
 def get_banner(url):
-    http_communicator = HTTPCommunicator()
-    html_data = http_communicator.get(url)
+    html_data = http_request.get(url)
     soup_strainer = SoupStrainer("head")
     beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
 
