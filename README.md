@@ -1,4 +1,6 @@
-# ![Channel9 Addon][9] Microsoft Channel9 Kodi Addon [![Build status](https://ci.appveyor.com/api/projects/status/svtto1mpdsn92ej4?svg=true)](https://ci.appveyor.com/project/camalot/plugin-video-microsoft-channel9)
+![Channel9 Addon][9]
+
+# Microsoft Channel9 Kodi Addon [![Build status](https://ci.appveyor.com/api/projects/status/svtto1mpdsn92ej4?svg=true)](https://ci.appveyor.com/project/camalot/plugin-video-microsoft-channel9)
 
 This started out as a fork of dandar3's channel 9 Kodi addon. It has since gone through a complete rewrite, adding support for other "channels" that were not supported.
 
