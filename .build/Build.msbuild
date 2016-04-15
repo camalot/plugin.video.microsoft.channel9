@@ -60,9 +60,13 @@
 			<Output ItemName="ZipFiles" TaskParameter="Include" />
 		</CreateItem>
 
-		<Zip Files="@(ZipFiles);"
+		<!--Zip Files="@(ZipFiles);"
 				 WorkingDirectory="$(OutputPath)"
-				 ZipFileName="$(OutputPath)$(CI_PROJECT_NAME)-$(CI_BUILD_VERSION).zip" ZipLevel="1" Flatten="False" />
+				 ZipFileName="$(OutputPath)$(CI_PROJECT_NAME)-$(CI_BUILD_VERSION).zip" ZipLevel="1" Flatten="False" /-->
+
+		<Exec
+			Command="7za a -r -y -mx0 $(CI_PROJECT_NAME)-$(CI_BUILD_VERSION).zip $(CI_PROJECT_NAME)"
+			WorkingDirectory="$(OutputPath)" />
 
 		<Delete Files="@(ZipFiles)" />
 		<RemoveDir Directories="$(OutputPath)$(CI_PROJECT_NAME)\" />

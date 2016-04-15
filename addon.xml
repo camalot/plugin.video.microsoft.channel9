@@ -11,10 +11,11 @@
 
 	<extension point="xbmc.addon.metadata">
 		<platform>all</platform>
-		<summary>Watch videos from Microsoft Channel 9</summary>
-		<description lang="en">Watch videos from Microsoft Channel 9 http://channel9.msdn.com/</description>
-		<website>https://github.com/camalot/plugin.video.microsoft.channel9</website>
-		<source>https://github.com/camalot/plugin.video.microsoft.channel9</source>
-		<license>Apache License, Version 2.0</license>
+		<summary><![CDATA[Watch videos from Microsoft Channel 9]]></summary>
+		<description><![CDATA[Watch videos from Microsoft Channel 9 http://channel9.msdn.com/]]></description>
+		<language>en</language>
+		<license><![CDATA[http://www.apache.org/licenses/LICENSE-2.0]]></license>
+		<source><![CDATA[https://github.com/camalot/plugin.video.microsoft.channel9]]></source>
+		<website><![CDATA[https://twitter.com/abryanconrad]]></website>
 	</extension>
 </addon>
