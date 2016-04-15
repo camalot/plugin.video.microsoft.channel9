@@ -12,7 +12,7 @@
 	</PropertyGroup>
 
 	<Target Name="Build" DependsOnTargets="SetBuildNumber;CopyFilesToOutput;AssemblyInfo;ZipRelease">
-		
+
 	</Target>
 
 	<Target Name="OutputPrep">
@@ -59,14 +59,11 @@
 		<CreateItem Include="$(OutputPath)$(CI_PROJECT_NAME)\**\*" Exclude="$(OutputPath)*.zip;">
 			<Output ItemName="ZipFiles" TaskParameter="Include" />
 		</CreateItem>
-		
-		<Zip Comment="[Build Date: $(CI_BUILD_DATE) $(CI_BUILD_TIME)]
-$(CI_PROJECT_NAME) version $(CI_BUILD_VERSION)
 
-$(CI_PROJECT_URL)" Files="@(ZipFiles);"
+		<Zip Files="@(ZipFiles);"
 				 WorkingDirectory="$(OutputPath)"
-				 ZipFileName="$(OutputPath)$(CI_PROJECT_NAME)-$(CI_BUILD_VERSION).zip" ZipLevel="0" Flatten="False" />
-				 
+				 ZipFileName="$(OutputPath)$(CI_PROJECT_NAME)-$(CI_BUILD_VERSION).zip" ZipLevel="1" Flatten="False" />
+
 		<Delete Files="@(ZipFiles)" />
 		<RemoveDir Directories="$(OutputPath)$(CI_PROJECT_NAME)\" />
 	</Target>
