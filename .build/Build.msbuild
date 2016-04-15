@@ -8,11 +8,17 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<PowerShellExe>$(WINDIR)\System32\WindowsPowerShell\v1.0\Powershell.exe</PowerShellExe>
+		<PowerShellExe Condition=" '$(PowerShellExe)'=='' ">$(WINDIR)\System32\WindowsPowerShell\v1.0\Powershell.exe</PowerShellExe>
 	</PropertyGroup>
 
-	<Target Name="Build" DependsOnTargets="SetBuildNumber;CopyFilesToOutput;AssemblyInfo;ZipRelease">
+	<Target Name="Build" DependsOnTargets="BuildPrep;SetBuildNumber;CopyFilesToOutput;AssemblyInfo;ZipRelease">
 
+	</Target>
+
+	<Target Name="BuildPrep">
+		<Exec
+			Condition=" '$(CI)' == 'False' "
+			Command="$(PowerShellExe) -NonInteractive -ExecutionPolicy Unrestricted -Command &quot;&amp; { &amp; &apos;$(MSBuildProjectDirectory)\..\.appveyor\appveyor.install.ps1&apos; } &quot;" />
 	</Target>
 
 	<Target Name="OutputPrep">
@@ -59,10 +65,6 @@
 		<CreateItem Include="$(OutputPath)$(CI_PROJECT_NAME)\**\*" Exclude="$(OutputPath)*.zip;">
 			<Output ItemName="ZipFiles" TaskParameter="Include" />
 		</CreateItem>
-
-		<!--Zip Files="@(ZipFiles);"
-				 WorkingDirectory="$(OutputPath)"
-				 ZipFileName="$(OutputPath)$(CI_PROJECT_NAME)-$(CI_BUILD_VERSION).zip" ZipLevel="1" Flatten="False" /-->
 
 		<Exec
 			Command="7za a -r -y -mx0 $(CI_PROJECT_NAME)-$(CI_BUILD_VERSION).zip $(CI_PROJECT_NAME)"
