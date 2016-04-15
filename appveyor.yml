@@ -2,13 +2,19 @@ version: 2.0.{build}
 pull_requests:
   do_not_increment_build_number: true
 skip_tags: true
+install:
+- ps: .\.appveyor\appveyor.install.ps1
 before_build:
 - ps: .\.appveyor\appveyor.before-build.ps1
 build:
   project: .\.build\Build.msbuild
-  verbosity: normal
+  verbosity: detailed
+before_package:
+- ps: .\.appveyor\appveyor.before-packaging.ps1
 after_build:
 - ps: .\.appveyor\appveyor.after-build.ps1
+test_script:
+- ps: ./.appveyor/appveyor.tests.ps1
 artifacts:
 - path: '**\bin\**\*.zip'
   name: Zip
@@ -24,5 +30,23 @@ deploy:
   on:
     branch: master
     CI_DEPLOY_GITHUB: True
+- provider: GitHub
+  tag: $(APPVEYOR_PROJECT_NAME)-v$(CI_BUILD_VERSION)-prerelease
+  release: $(APPVEYOR_PROJECT_NAME)-v$(CI_BUILD_VERSION)-prerelease
+  auth_token:
+    secure: UEgy2H9zJKLi599QoO3qVf5BKFqloRQ246ez9cEgsfV3vooAUfVopMS9+IjRtArL
+  artifact: Zip
+  prerelease: true
+  on:
+    branch: develop
+    CI_DEPLOY_GITHUB_PRE: True
 after_deploy:
 - ps: .\.appveyor\appveyor.after-deployment.ps1
+notifications:
+- provider: Slack
+  auth_token:
+    secure: dEyWFeGEKdMmajrfGAYOGhWPEpivj1DiWu1xbbngPVcDW8vucg7JvWtJWTdARJ2bLedEg009P1o0JupLLx69Fg==
+  channel: notifications
+  on_build_success: true
+  on_build_failure: true
+  on_build_status_changed: true
