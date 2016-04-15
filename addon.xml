@@ -12,7 +12,6 @@
 	<extension point="xbmc.addon.metadata">
 		<platform>all</platform>
 		<summary>Watch videos from Microsoft Channel 9</summary>
-		<description>Watch videos from Microsoft Channel 9
-http://channel9.msdn.com/</description>
+		<description>Watch videos from Microsoft Channel 9 http://channel9.msdn.com/</description>
 	</extension>
 </addon>
