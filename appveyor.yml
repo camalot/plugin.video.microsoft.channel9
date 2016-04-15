@@ -39,7 +39,7 @@ deploy:
   prerelease: true
   on:
     branch: develop
-    CI_DEPLOY_GITHUB: True
+    CI_DEPLOY_GITHUB_PRE: True
 after_deploy:
 - ps: .\.appveyor\appveyor.after-deployment.ps1
 notifications:
