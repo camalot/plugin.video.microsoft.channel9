@@ -22,8 +22,8 @@ before_deploy:
 - ps: .\.appveyor\appveyor.before-deployment.ps1
 deploy:
 - provider: GitHub
-  tag: $(APPVEYOR_PROJECT_NAME)-v$(CI_BUILD_VERSION)
-  release: $(APPVEYOR_PROJECT_NAME)-v$(CI_BUILD_VERSION)
+  tag: $(CI_BUILD_VERSION)
+  release: $(CI_BUILD_VERSION)
   auth_token:
     secure: UEgy2H9zJKLi599QoO3qVf5BKFqloRQ246ez9cEgsfV3vooAUfVopMS9+IjRtArL
   artifact: Zip
@@ -31,8 +31,8 @@ deploy:
     branch: master
     CI_DEPLOY_GITHUB: True
 - provider: GitHub
-  tag: $(APPVEYOR_PROJECT_NAME)-v$(CI_BUILD_VERSION)-prerelease
-  release: $(APPVEYOR_PROJECT_NAME)-v$(CI_BUILD_VERSION)-prerelease
+  tag: $(CI_BUILD_VERSION)-prerelease
+  release: $(CI_BUILD_VERSION)-prerelease
   auth_token:
     secure: UEgy2H9zJKLi599QoO3qVf5BKFqloRQ246ez9cEgsfV3vooAUfVopMS9+IjRtArL
   artifact: Zip
