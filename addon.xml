@@ -16,13 +16,13 @@
 		<language>en</language>
 		<license><![CDATA[http://www.apache.org/licenses/LICENSE-2.0]]></license>
 		<source><![CDATA[https://github.com/camalot/plugin.video.microsoft.channel9]]></source>
-		<website><![CDATA[https://twitter.com/abryanconrad]]></website>
+		<website><![CDATA[https://github.com/camalot/plugin.video.microsoft.channel9]]></website>
 	</extension>
 
 	<extension point="xbmc.addon.repository"
               name="camalot's repository">
 		<info compressed="true">https://camalot.github.io/repository.camalot/addons.xml</info>
 		<checksum>https://camalot.github.io/repository.camalot/addons.xml.md5</checksum>
-		<datadir zip="true">https://camalot.github.io/repository.camalot/plugin.video.microsoft.channel9</datadir>
+		<datadir zip="true">https://camalot.github.io/repository.camalot/plugin.video.microsoft.channel9/</datadir>
   	</extension>
 </addon>
