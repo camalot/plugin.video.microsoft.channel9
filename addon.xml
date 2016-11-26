@@ -21,8 +21,8 @@
 
 	<extension point="xbmc.addon.repository"
               name="camalot's repository">
-		<info compressed="true">https://camalot.github.io/repository.camalot/addons/addons.xml</info>
-		<checksum>https://camalot.github.io/repository.camalot/addons/addons.xml.md5</checksum>
-		<datadir zip="true">https://camalot.github.io/repository.camalot/addons/plugin.video.microsoft.channel9</datadir>
+		<info compressed="true">https://camalot.github.io/repository.camalot/addons.xml</info>
+		<checksum>https://camalot.github.io/repository.camalot/addons.xml.md5</checksum>
+		<datadir zip="true">https://camalot.github.io/repository.camalot/plugin.video.microsoft.channel9</datadir>
   	</extension>
 </addon>
