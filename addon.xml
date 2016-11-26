@@ -24,5 +24,5 @@
 		<info compressed="true">https://camalot.github.io/repository.camalot/addons/addons.xml</info>
 		<checksum>https://camalot.github.io/repository.camalot/addons/addons.xml.md5</checksum>
 		<datadir zip="true">https://camalot.github.io/repository.camalot/addons/plugin.video.microsoft.channel9</datadir>
-  	</extension
+  	</extension>
 </addon>
