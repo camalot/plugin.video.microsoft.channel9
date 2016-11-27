@@ -19,10 +19,10 @@
 		<website><![CDATA[https://github.com/camalot/plugin.video.microsoft.channel9]]></website>
 	</extension>
 
-	<extension point="xbmc.addon.repository"
-              name="camalot's repository">
-		<info compressed="true">https://camalot.github.io/repository.camalot/addons.xml</info>
-		<checksum>https://camalot.github.io/repository.camalot/addons.xml.md5</checksum>
-		<datadir zip="true">https://camalot.github.io/repository.camalot/plugin.video.microsoft.channel9/</datadir>
-  	</extension>
+	<!--<extension point="xbmc.addon.repository"-->
+              <!--name="camalot's repository">-->
+		<!--<info compressed="true">https://camalot.github.io/repository.camalot/addons.xml</info>-->
+		<!--<checksum>https://camalot.github.io/repository.camalot/addons.xml.md5</checksum>-->
+		<!--<datadir zip="true">https://camalot.github.io/repository.camalot/plugin.video.microsoft.channel9/</datadir>-->
+  	<!--</extension>-->
 </addon>
