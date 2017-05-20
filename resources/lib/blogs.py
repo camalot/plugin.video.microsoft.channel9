@@ -124,10 +124,8 @@ class Main:
 
         thumb_image = div_entry_image.find("img", {"role": "img"})
 
-        thumbnail = ""
-        if thumb_image is None:
-            thumbnail = "/assets/images/nineguy-512-bw.png"
-        else:
+        thumbnail = "/assets/images/nineguy-512-bw.png"
+        if thumb_image is not None:
             thumbnail = thumb_image["src"]
 
         if not re.match("^https?:", thumbnail):
