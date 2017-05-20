@@ -21,7 +21,8 @@ class Main:
         self.action = params.get("action", None)
         self.sort_method = urllib.unquote_plus(params.get("sort", "NONE"))
         self.event_url = urllib.unquote_plus(params.get("event-url", ""))
-        self.browse_url = "%s/Browse/Events?sort=%s&page=%i&%s"
+        self.browse_events_url = "%s/Browse/Events/recent?sort=%s&page=%i&%s"
+        self.browse_live_url = "%s/Browse/Events/current?sort=%s&page=%i&%s"
 
         utils.set_no_sort()
 
@@ -85,7 +86,7 @@ class Main:
         return
 
     def browse(self):
-        url = self.browse_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
+        url = self.browse_events_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
         html_data = http_request.get(url)
         print url
         #
@@ -93,6 +94,7 @@ class Main:
         #
         soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
+        container = beautiful_soup.find("a", {})
         articles = beautiful_soup.findAll("article")
         for article in articles:
             action_url = ("%s?action=list-event&sort=%s&event-url=" % (
@@ -107,7 +109,7 @@ class Main:
         return
 
     def live(self):
-        url = self.browse_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
+        url = self.browse_live_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
         html_data = http_request.get(url)
         print url
         soup_strainer = SoupStrainer("main")
