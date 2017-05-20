@@ -9,6 +9,7 @@ from BeautifulSoup import BeautifulSoup
 import http_request
 import control
 import utils
+import xbmc
 
 class Main:
     def __init__(self):
@@ -78,16 +79,15 @@ class Main:
     def browse(self):
         url = self.browse_url % (utils.url_root, self.sort, self.current_page, utils.selected_languages())
         html_data = http_request.get(url)
-        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
-        if ul_entries is None:
+        articles = beautiful_soup.findAll("article")
+        if articles is None:
             control.directory_end()
             return
 
-        li_entries = ul_entries.findAll("li")
-        for li_entry in li_entries:
-            self.add_blog_directory(li_entry)
+        for article in articles:
+            self.add_blog_directory(article)
 
         next_url = "%s?action=browse-blogs&page=%i&sort=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
@@ -99,17 +99,15 @@ class Main:
     def list(self):
         url = "%s%s?page=%u&sort=%s" % (utils.url_root, self.blog_url, self.current_page, self.sort)
         html_data = http_request.get(url)
-        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-
-        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
-        if ul_entries is None:
+        articles = beautiful_soup.findAll("article")
+        if articles is None:
             control.directory_end()
             return
 
-        li_entries = ul_entries.findAll("li")
-        for li_entry in li_entries:
-            utils.add_entry_video(li_entry)
+        for article in articles:
+            utils.add_entry_video(article)
 
         next_url = "%s?action=list-blog&page=%i&sort=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
@@ -119,16 +117,19 @@ class Main:
         return
 
     def add_blog_directory(self, entry):
+
         # Thumbnail...
-        div_entry_image = entry.find("div", {"class": "entry-image"})
-        thumbnail = div_entry_image.find("img", {"class": "thumb"})["src"]
+        div_entry_image = entry.find("a", {"class": "tile"})
+        if div_entry_image is None:
+            return
+        thumbnail = div_entry_image.find("img", {"role": "img"})["src"]
 
         if not re.match("^https?:", thumbnail):
             thumbnail = "%s%s" % (utils.url_root, thumbnail)
 
         # Title
-        div_entry_meta = entry.find("div", {"class": "entry-meta"})
-        a_title = div_entry_meta.find("a", {"class": "title"})
+        div_entry_meta = entry.find("h3")
+        a_title = div_entry_meta.find("a")
         title = a_title.string
 
         # Show page URL
@@ -138,11 +139,9 @@ class Main:
         if re.match('^https?:', show_url):
             return
 
-        div_description = div_entry_meta.find("div", {"class": "description"})
-        plot = div_description.string
-
-        # Show page URL
-        show_url = a_title["href"]
+        #div_description = div_entry_meta.find("div", {"class": "description"})
+        #plot = div_description.string
+        plot=""
 
         # Add to list...
         list_item = control.item(title, iconImage=utils.icon_folder, thumbnailImage=thumbnail)

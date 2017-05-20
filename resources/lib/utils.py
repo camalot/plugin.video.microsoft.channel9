@@ -50,22 +50,25 @@ def selected_languages():
 
 def add_entry_video(entry):
     # Thumbnail...
-    div_entry_image = entry.find("div", {"class": "entry-image"})
+    div_entry_image = entry.find("a", {"class": "tile"})
     if div_entry_image is None:
         return
-    thumbnail = div_entry_image.find("img", {"class": "thumb"})["src"]
+    thumbnail = div_entry_image.find("img", {"role": "img"})["src"]
     if not re.match("^https?:", thumbnail):
         thumbnail = "%s%s" % (url_root, thumbnail)
     # Title
-    div_entry_meta = entry.find("div", {"class": "entry-meta"})
-    a_title = div_entry_meta.find("a", {"class": "title"})
+    heading = entry.find("h3")
+    if heading is None:
+        return
+
+    a_title = heading.find("a")
     title = a_title.string
 
     # Video page
     video_page_url = a_title["href"]
 
     # Genre (date)...
-    div_data = div_entry_meta.find("div", {"class": "data"})
+    div_data = heading.find("div", {"class": "data"})
 
     if div_data is None:
         genre = "none"
@@ -74,8 +77,9 @@ def add_entry_video(entry):
         genre = span_class_date.string
 
     # Plot
-    div_description = div_entry_meta.find("div", {"class": "description"})
-    plot = div_description.string
+    #div_description = div_entry_meta.find("div", {"class": "description"})
+    #plot = div_description.string
+    plot = ""
 
     list_item = control.item(title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
     list_item.setInfo("video", {"Title": title, "Studio": "Microsoft Channel 9", "Plot": plot, "Genre": genre})
@@ -86,7 +90,7 @@ def add_entry_video(entry):
 
 
 def add_next_page(bs, item_url, page):
-    ul_paging = bs.find("ul", {"class": "paging"})
+    ul_paging = bs.find("ul", {"role": "navigation"})
     if ul_paging is not None:
         list_item = control.item("[B][UPPERCASE][COLOR green]%s[/COLOR][/UPPERCASE][/B]" % control.lang(30503) % page,
                                  iconImage=icon_next, thumbnailImage=icon_next)
@@ -101,16 +105,20 @@ def add_directory(text, icon, thumbnail, url):
 
 
 def add_show_directory(entry, action_url):
+    # Title
+    header = entry.find("header")
+    if header is None:
+        return
+
+    a_title = header.find("a")
+    title = a_title.string
+
     # Thumbnail...
-    div_entry_image = entry.find("div", {"class": "entry-image"})
-    thumbnail = div_entry_image.find("img", {"class": "thumb"})["src"]
+    thumbnail = entry.find("img", {"role": "img"})["src"]
+    xbmc.log("image %s" %(thumbnail), xbmc.LOGERROR)
+
     if not re.match("^https?:", thumbnail):
         thumbnail = "%s%s" % (url_root, thumbnail)
-
-    # Title
-    div_entry_meta = entry.find("div", {"class": "entry-meta"})
-    a_title = div_entry_meta.find("a", {"class": "title"})
-    title = a_title.string
 
     # Show page URL
     show_url = a_title["href"]
