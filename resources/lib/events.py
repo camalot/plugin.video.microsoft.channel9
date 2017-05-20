@@ -97,8 +97,7 @@ class Main:
         container = beautiful_soup.find("a", {})
         articles = beautiful_soup.findAll("article")
         for article in articles:
-            action_url = ("%s?action=list-event&sort=%s&event-url=" % (
-                sys.argv[0], urllib.quote_plus(self.sort_method))) + "%s"
+            action_url = ("%s?action=list-event&event-url=" % (sys.argv[0])) + "%s"
             utils.add_show_directory(article, action_url)
 
         next_url = "%s?action=browse-shows&page=%i&sort=%s" % (
@@ -134,7 +133,7 @@ class Main:
         else:
             url = self.event_url
 
-        url = "%s?sort=%s&page=%i&%s" % (url, self.sort, self.current_page, utils.selected_languages())
+        url = "%s?sort=%s&page=%i&direction=asc&%s" % (url, self.sort, self.current_page, utils.selected_languages())
 
         html_data = http_request.get(url)
 
