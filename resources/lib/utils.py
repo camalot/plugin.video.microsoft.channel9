@@ -53,7 +53,12 @@ def add_entry_video(entry):
     div_entry_image = entry.find("a", {"class": "tile"})
     if div_entry_image is None:
         return
-    thumbnail = div_entry_image.find("img", {"role": "img"})["src"]
+    thumb_image = div_entry_image.find("img", {"role": "img"})
+
+    thumbnail = "/assets/images/nineguy-512-bw.png"
+    if thumb_image is not None:
+        thumbnail = thumb_image["src"]
+
     if not re.match("^https?:", thumbnail):
         thumbnail = "%s%s" % (url_root, thumbnail)
     # Title
@@ -114,8 +119,11 @@ def add_show_directory(entry, action_url):
     title = a_title.string
 
     # Thumbnail...
-    thumbnail = entry.find("img", {"role": "img"})["src"]
-    xbmc.log("image %s" %(thumbnail), xbmc.LOGERROR)
+    thumb_image = entry.find("img", {"role": "img"})
+
+    thumbnail = "/assets/images/nineguy-512-bw.png"
+    if thumb_image is not None:
+        thumbnail = thumb_image["src"]
 
     if not re.match("^https?:", thumbnail):
         thumbnail = "%s%s" % (url_root, thumbnail)

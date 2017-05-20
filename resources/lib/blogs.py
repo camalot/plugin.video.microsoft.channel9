@@ -117,12 +117,18 @@ class Main:
         return
 
     def add_blog_directory(self, entry):
-
         # Thumbnail...
         div_entry_image = entry.find("a", {"class": "tile"})
         if div_entry_image is None:
             return
-        thumbnail = div_entry_image.find("img", {"role": "img"})["src"]
+
+        thumb_image = div_entry_image.find("img", {"role": "img"})
+
+        thumbnail = ""
+        if thumb_image is None:
+            thumbnail = "/assets/images/nineguy-512-bw.png"
+        else:
+            thumbnail = thumb_image["src"]
 
         if not re.match("^https?:", thumbnail):
             thumbnail = "%s%s" % (utils.url_root, thumbnail)
