@@ -2,18 +2,18 @@
 <strings>
   <string id="30000">Microsoft Channel 9</string>
 
-  <!-- 
-   * Settings labels 
+  <!--
+   * Settings labels
    -->
   <string id="30100">Version</string>
   <string id="30101">Author</string>
   <string id="30102">Website</string>
-    
+
   <string id="30200">Video player</string>
   <string id="30201">Auto</string>
   <string id="30202">DVDPlayer</string>
   <string id="30203">MPlayer</string>
-      
+
   <string id="30300">Video format</string>
   <string id="30303">High Quality</string>
   <string id="30301">Medium Quality</string>

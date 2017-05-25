@@ -24,8 +24,8 @@ function Set-BuildVersion {
 		$m1 = $split[0];
 		$m2 = $split[1];
 		$b = $env:APPVEYOR_BUILD_NUMBER;
-		$r = $split[3];		
-		
+		$r = $split[3];
+
 		Set-AppveyorBuildVariable -Name CI_BUILD_MAJOR -Value $m1;
 		Set-AppveyorBuildVariable -Name CI_BUILD_MINOR -Value $m2;
 

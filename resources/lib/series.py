@@ -9,6 +9,7 @@ from BeautifulSoup import BeautifulSoup
 import http_request
 import control
 import utils
+import xbmc
 
 
 class Main:
@@ -86,13 +87,12 @@ class Main:
     def browse(self):
         url = self.browse_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
         html_data = http_request.get(url)
-        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
-        li_entries = ul_entries.findAll("li")
-        for li_entry in li_entries:
+        articles = beautiful_soup.findAll("article")
+        for article in articles:
             action_url = ("%s?action=list-series&series-url=" % (sys.argv[0])) + "%s"
-            utils.add_show_directory(li_entry, action_url)
+            utils.add_show_directory(article, action_url)
 
         next_url = "%s?action=browse-series&page=%i&sort=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
@@ -106,12 +106,11 @@ class Main:
             utils.url_root, self.series_url, self.sort, self.current_page, utils.selected_languages())
         html_data = http_request.get(url)
         print url
-        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
-        li_entries = ul_entries.findAll("li")
-        for li_entry in li_entries:
-            utils.add_entry_video(li_entry)
+        articles = beautiful_soup.findAll("article")
+        for article in articles:
+            utils.add_entry_video(article)
 
         next_url = "%s?action=list-series&page=%i&sort=%s&series-url=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method), urllib.quote_plus(self.series_url))
