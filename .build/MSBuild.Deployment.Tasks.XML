@@ -6,7 +6,7 @@
     <members>
         <member name="T:ReleaseService">
             <summary>
-            
+
             </summary>
             <remarks/>
         </member>
@@ -315,7 +315,7 @@
         </member>
         <member name="T:ReleaseFile">
             <summary>
-            
+
             </summary>
             <remarks/>
         </member>
@@ -359,7 +359,7 @@
         </member>
         <member name="T:CreateAReleaseCompletedEventArgs">
             <summary>
-            
+
             </summary>
             <remarks/>
         </member>
@@ -414,7 +414,7 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.IProxyTask">
             <summary>
-            
+
             </summary>
         </member>
         <member name="P:MSBuild.Deployment.Tasks.IProxyTask.ProxyHost">
@@ -443,7 +443,7 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.ITimeoutTask">
             <summary>
-            
+
             </summary>
         </member>
         <member name="P:MSBuild.Deployment.Tasks.ITimeoutTask.Timeout">
@@ -454,7 +454,7 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.ITreatErrorsAsWarningsTask">
             <summary>
-            
+
             </summary>
         </member>
         <member name="P:MSBuild.Deployment.Tasks.ITreatErrorsAsWarningsTask.TreatErrorsAsWarnings">
@@ -682,27 +682,27 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.CodePlexCreateRelease.DevelopmentStatus">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.CodePlexCreateRelease.DevelopmentStatus.Alpha">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.CodePlexCreateRelease.DevelopmentStatus.Beta">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.CodePlexCreateRelease.DevelopmentStatus.Stable">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.CodePlexCreateRelease.DevelopmentStatus.Planning">
             <summary>
-            
+
             </summary>
         </member>
         <member name="T:MSBuild.Deployment.Tasks.CodePlexUpload">
@@ -808,27 +808,27 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.CodePlexUpload.FileResourceType">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.CodePlexUpload.FileResourceType.RuntimeBinary">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.CodePlexUpload.FileResourceType.SourceCode">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.CodePlexUpload.FileResourceType.Documentation">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.CodePlexUpload.FileResourceType.Example">
             <summary>
-            
+
             </summary>
         </member>
         <member name="T:MSBuild.Deployment.Tasks.GoogleCodeUpload">
@@ -848,7 +848,7 @@
         </member>
         <member name="F:MSBuild.Deployment.Tasks.GoogleCodeUpload.NEWLINE">
             <summary>
-            
+
             </summary>
         </member>
         <member name="M:MSBuild.Deployment.Tasks.GoogleCodeUpload.#ctor">
@@ -1048,7 +1048,7 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.MimeType">
             <summary>
-            
+
             </summary>
         </member>
         <member name="M:MSBuild.Deployment.Tasks.MimeType.FindMimeFromData(System.UInt32,System.String,System.Byte[],System.UInt32,System.String,System.UInt32,System.IntPtr@,System.UInt32)">
@@ -1207,7 +1207,7 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.Services.BitlyResult.NodeKeyValue">
             <summary>
-            
+
             </summary>
         </member>
         <member name="P:MSBuild.Deployment.Tasks.Services.BitlyResult.NodeKeyValue.UserHash">
@@ -1242,7 +1242,7 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.Services.BitlyService">
             <summary>
-            
+
             </summary>
         </member>
         <member name="M:MSBuild.Deployment.Tasks.Services.BitlyService.Shorten(System.String,System.String,System.String)">
@@ -1295,12 +1295,12 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.Services.Twitter">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.TwitterBaseUrlFormat">
             <summary>
-            
+
             </summary>
         </member>
         <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.#ctor">
@@ -1331,7 +1331,7 @@
         </member>
         <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.ExecuteGetCommand(System.String,System.String,System.String)">
             <summary>
-            Executes an HTTP GET command and retrives the information.		
+            Executes an HTTP GET command and retrives the information.
             </summary>
             <param name="url">The URL to perform the GET operation</param>
             <param name="userName">The username to use with the request</param>
@@ -1340,13 +1340,13 @@
         </member>
         <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.ExecutePostCommand(System.String,System.String,System.String,System.String)">
             <summary>
-            Executes an HTTP POST command and retrives the information.		
+            Executes an HTTP POST command and retrives the information.
             This function will automatically include a "source" parameter if the "Source" property is set.
             </summary>
             <param name="url">The URL to perform the POST operation</param>
             <param name="userName">The username to use with the request</param>
             <param name="password">The password to use with the request</param>
-            <param name="data">The data to post</param> 
+            <param name="data">The data to post</param>
             <returns>The response of the request, or null if we got 404 or nothing.</returns>
         </member>
         <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetPublicTimeline(MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
@@ -1739,34 +1739,34 @@
             http://twitter.pbwiki.com/API-Docs.
             According to the Twitter Fan Wiki at http://twitter.pbwiki.com/API-Docs and supported by
             the Twitter developers, this will be used in the future (hopefully near) to set more information
-            in Twitter about the client posting the information as well as future usage in a clients directory.		
+            in Twitter about the client posting the information as well as future usage in a clients directory.
             </summary>
         </member>
         <member name="T:MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType">
             <summary>
             The output formats supported by Twitter. Not all of them can be used with all of the functions.
-            For more information about the output formats and the supported functions Check the 
+            For more information about the output formats and the supported functions Check the
             Twitter documentation at: http://groups.google.com/group/twitter-development-talk/web/api-documentation
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType.JSON">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType.XML">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType.RSS">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType.Atom">
             <summary>
-            
+
             </summary>
         </member>
         <member name="T:MSBuild.Deployment.Tasks.Services.Twitter.ObjectType">
@@ -1776,74 +1776,74 @@
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ObjectType.Statuses">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ObjectType.Account">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ObjectType.Users">
             <summary>
-            
+
             </summary>
         </member>
         <member name="T:MSBuild.Deployment.Tasks.Services.Twitter.ActionType">
             <summary>
             The various actions used at Twitter. Not all actions works on all object types.
-            For more information about the actions types and the supported functions Check the 
+            For more information about the actions types and the supported functions Check the
             Twitter documentation at: http://groups.google.com/group/twitter-development-talk/web/api-documentation
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Public_Timeline">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.User_Timeline">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Friends_Timeline">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Friends">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Followers">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Update">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Account_Settings">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Featured">
             <summary>
-            
+
             </summary>
         </member>
         <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Show">
             <summary>
-            
+
             </summary>
         </member>
         <member name="T:MSBuild.Deployment.Tasks.SkyDriveCreateRelease">
             <summary>
-            
+
             </summary>
         </member>
         <member name="M:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.#ctor">
@@ -1949,7 +1949,7 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.SkyDriveUpload">
             <summary>
-            
+
             </summary>
         </member>
         <member name="M:MSBuild.Deployment.Tasks.SkyDriveUpload.#ctor">
@@ -2057,7 +2057,7 @@
         </member>
         <member name="T:MSBuild.Deployment.Tasks.TaskUserAgent">
             <summary>
-            
+
             </summary>
         </member>
         <member name="M:MSBuild.Deployment.Tasks.TaskUserAgent.GetUserAgent(Microsoft.Build.Utilities.Task)">

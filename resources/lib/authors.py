@@ -71,15 +71,15 @@ class Main:
             utils.url_root, urllib.quote_plus(self.sort), self.current_page, urllib.quote_plus(self.search_term),
             utils.selected_languages())
         html_data = http_request.get(url)
-        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        ul_authors = beautiful_soup.find("ul", {"class": "authors"})
 
-        if ul_authors is None:
+        ul_entries = beautiful_soup.find("ol", {"class": "authorsByLetter"})
+        if ul_entries is None:
             control.directory_end()
             return
 
-        li_entries = ul_authors.findAll("li")
+        li_entries = ul_entries.findAll("li")
         for li_entry in li_entries:
             self.add_author_directory(li_entry)
 
@@ -99,17 +99,15 @@ class Main:
         url = "%s/%s/posts?page=%u&%s" % (
             utils.url_root, self.author_url, self.current_page, utils.selected_languages())
         html_data = http_request.get(url)
-        soup_strainer = SoupStrainer("div", {"class": "user-content"})
+        soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-
-        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
-        if ul_entries is None:
+        articles = beautiful_soup.findAll("article")
+        if articles is None:
             control.directory_end()
             return
 
-        li_entries = ul_entries.findAll("li")
-        for li_entry in li_entries:
-            utils.add_entry_video(li_entry)
+        for article in articles:
+            utils.add_entry_video(article)
 
         next_url = "%s?action=list-author&page=%i&author-url=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.author_url))
@@ -133,7 +131,7 @@ class Main:
 
     def add_author_directory(self, entry):
         html_parser = HTMLParser.HTMLParser()
-        div_author_image = entry.find("img", {"class": "avatar"})
+        div_author_image = entry.find("img")
         if div_author_image is None:
             return
 
@@ -141,14 +139,16 @@ class Main:
         if not re.match("^https?:", author_thumb):
             thumbnail = "%s%s" % (utils.url_root, author_thumb)
 
-        author_a = entry.find("a", {"class": "button"})
+        author_a = entry.find("a")
         author_link = author_a['href']
 
         span_name = entry.find("span", {"class": "name"})
-        author_name = html_parser.unescape(span_name.string)
+        span_displayname = entry.find("span", {"class": "displayName"})
+
+        author_name = html_parser.unescape("%s - %s" %(span_displayname.string.strip(), span_name.string.strip()) )
         span_count = entry.find("span", {"class": "count"})
-        episode_count = span_count.string
+        episode_count = span_count.string.strip()
 
         folder_url = '%s?action=list-author&author-url=%s' % (sys.argv[0], urllib.quote_plus(author_link))
-        utils.add_directory("%s (%s)" % (author_name, episode_count), "DefaultDirectory.png", author_thumb, folder_url)
+        utils.add_directory("%s %s" % (author_name, episode_count), "DefaultDirectory.png", author_thumb, folder_url)
         return

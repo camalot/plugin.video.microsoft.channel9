@@ -53,16 +53,15 @@ class Main:
         url = self.url % (urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
         html_data = http_request.get(url)
 
-        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-
-        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
-        if ul_entries is None:
+        articles = beautiful_soup.findAll("article")
+        if articles is None:
             control.directory_end()
             return
-        li_entries = ul_entries.findAll("li")
-        for li_entry in li_entries:
-            utils.add_entry_video(li_entry)
+
+        for article in articles:
+            utils.add_entry_video(article)
 
         next_url = "%s?action=list-all&page=%i&sort=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
