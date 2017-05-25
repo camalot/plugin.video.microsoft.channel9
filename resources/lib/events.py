@@ -10,6 +10,7 @@ import http_request
 import control
 import utils
 import json
+import xbmc
 
 
 class Main:
@@ -20,7 +21,8 @@ class Main:
         self.action = params.get("action", None)
         self.sort_method = urllib.unquote_plus(params.get("sort", "NONE"))
         self.event_url = urllib.unquote_plus(params.get("event-url", ""))
-        self.browse_url = "%s/Browse/Events?sort=%s&page=%i&%s"
+        self.browse_events_url = "%s/Browse/Events/recent?sort=%s&page=%i&%s"
+        self.browse_live_url = "%s/Browse/Events/current?sort=%s&page=%i&%s"
 
         utils.set_no_sort()
 
@@ -84,20 +86,19 @@ class Main:
         return
 
     def browse(self):
-        url = self.browse_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
+        url = self.browse_events_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
         html_data = http_request.get(url)
         print url
         #
         # Parse response...
         #
-        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
-        li_entries = ul_entries.findAll("li")
-        for li_entry in li_entries:
-            action_url = ("%s?action=list-event&sort=%s&event-url=" % (
-                sys.argv[0], urllib.quote_plus(self.sort_method))) + "%s"
-            utils.add_show_directory(li_entry, action_url)
+        container = beautiful_soup.find("a", {})
+        articles = beautiful_soup.findAll("article")
+        for article in articles:
+            action_url = ("%s?action=list-event&event-url=" % (sys.argv[0])) + "%s"
+            utils.add_show_directory(article, action_url)
 
         next_url = "%s?action=browse-shows&page=%i&sort=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
@@ -107,22 +108,15 @@ class Main:
         return
 
     def live(self):
-        url = self.browse_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
+        url = self.browse_live_url % (utils.url_root, urllib.quote_plus(self.sort), self.current_page, utils.selected_languages())
         html_data = http_request.get(url)
         print url
-        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        ul_entries = beautiful_soup.find("ul", {"class": "entries"})
-
-        if ul_entries is None:
-            # nothing is live
-            control.directory_end()
-            return
-
-        li_entries = ul_entries.findAll("li")
-        for li_entry in li_entries:
+        articles = beautiful_soup.findAll("article")
+        for article in articles:
             action_url = ("%s?action=list-event&event-url=" % (sys.argv[0])) + "%s"
-            utils.add_show_directory(li_entry, action_url)
+            utils.add_show_directory(article, action_url)
 
         next_url = "%s?action=browse-shows&page=%i&sort=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method))
@@ -133,21 +127,25 @@ class Main:
         return
 
     def list(self):
-        url = "%s%s?sort=%s&page=%i&%s" % (
-            utils.url_root, self.event_url, self.sort, self.current_page, utils.selected_languages())
-        print url
+        url = ""
+        if not re.match("^https?:", self.event_url):
+            url = "%s%s" % (utils.url_root, self.event_url)
+        else:
+            url = self.event_url
+
+        url = "%s?sort=%s&page=%i&direction=asc&%s" % (url, self.sort, self.current_page, utils.selected_languages())
+
         html_data = http_request.get(url)
 
-        soup_strainer = SoupStrainer("div", {"class": "tab-content"})
+        soup_strainer = SoupStrainer("main")
         beautiful_soup = BeautifulSoup(html_data, soup_strainer, convertEntities=BeautifulSoup.HTML_ENTITIES)
-        ul_entries = beautiful_soup.find("ul", {"class": "entries sessions sessionList"})
-        if ul_entries is None:
+        articles = beautiful_soup.findAll("article")
+        if articles is None:
             control.directory_end()
             return
 
-        li_entries = ul_entries.findAll("li")
-        for li_entry in li_entries:
-            utils.add_entry_video(li_entry)
+        for article in articles:
+            utils.add_entry_video(article)
 
         next_url = "%s?action=list-event&page=%i&sort=%s&event-url=%s" % (
             sys.argv[0], self.current_page + 1, urllib.quote_plus(self.sort_method), urllib.quote_plus(self.event_url))

@@ -55,8 +55,10 @@ class Main:
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         playlist.clear()
 
-        list_item = xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
-        list_item.setInfo("video", {"Title": title, "Studio": studio, "Plot": plot, "Genre": genre})
+        list_item = xbmcgui.ListItem(
+            title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
+        list_item.setInfo(
+            "video", {"Title": title, "Studio": studio, "Plot": plot, "Genre": genre})
         playlist.add(video_url, list_item)
 
         # Close wait dialog...
@@ -76,16 +78,16 @@ class Main:
 
         html_data = http_request.get(video_page_url)
         # Parse HTML response...
-        soup_strainer = SoupStrainer("ul", {"class": "download"})
+        soup_strainer = SoupStrainer("div", {"class": "download"})
         beautiful_soup = BeautifulSoup(html_data, soup_strainer)
 
         video_url = None
-        li_entries = beautiful_soup.findAll("li")
-        for li_entry in li_entries:
-            li_entry_a = li_entry.find("a")
-            if li_entry_a is not None:
-                for quality in self.video_formats:
-                    if li_entry_a.string == quality:
-                        video_url = li_entry_a["href"]
-                        break
+        li_entries = beautiful_soup.findAll("option")
+        for quality in self.video_formats:
+            for li_entry in li_entries:
+                li_entry_a = li_entry.string.strip()
+                if li_entry_a is not None:
+                    if li_entry_a == quality:
+                        video_url = li_entry["value"]
+                        return video_url
         return video_url
