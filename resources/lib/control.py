@@ -102,5 +102,3 @@ def set_view_thumbnail():
         execute('Container.SetViewMode(511)')
     else:
         execute('Container.SetViewMode(500)')
-
-
