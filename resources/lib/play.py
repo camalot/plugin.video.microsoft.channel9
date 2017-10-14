@@ -82,12 +82,12 @@ class Main:
         beautiful_soup = BeautifulSoup(html_data, soup_strainer)
 
         video_url = None
-        li_entries = beautiful_soup.findAll("option")
+        li_entries = beautiful_soup.findAll("li")
         for quality in self.video_formats:
             for li_entry in li_entries:
-                li_entry_a = li_entry.string.strip()
+                li_entry_a = li_entry.find("a")
                 if li_entry_a is not None:
-                    if li_entry_a == quality:
-                        video_url = li_entry["value"]
+                    if li_entry_a.string.strip() == quality:
+                        video_url = li_entry_a["href"]
                         return video_url
-        return video_url
+	    return video_url
