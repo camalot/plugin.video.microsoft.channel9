@@ -15,6 +15,8 @@ Supports the following:
 - Tags
 - Authors
 - Search
+- Subtitles: _Thanks to [dimio5](https://github.com/dimio5)_ 
+
 
 Choose how to browse.
 
