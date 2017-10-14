@@ -1,4 +1,5 @@
 import sys
+import os
 import urllib
 import re
 import xbmc
@@ -39,8 +40,8 @@ class Main:
         dialog_wait = xbmcgui.DialogProgress()
         dialog_wait.create(control.lang(30504), title)
 
-        # Get video URL...
-        video_url = self.get_video_url(self.video_page_url)
+        # Get video URL and subtitles ...
+        video_url, subtitle_urls = self.get_video_url_and_subtitles(self.video_page_url)
 
         if video_url is None:
             # Close wait dialog...
@@ -59,6 +60,8 @@ class Main:
             title, iconImage="DefaultVideo.png", thumbnailImage=thumbnail)
         list_item.setInfo(
             "video", {"Title": title, "Studio": studio, "Plot": plot, "Genre": genre})
+	    list_item.setSubtitles(subtitle_urls)
+
         playlist.add(video_url, list_item)
 
         # Close wait dialog...
@@ -70,8 +73,8 @@ class Main:
         xbmc_player.play(playlist)
         return
 
-    # Get video URL
-    def get_video_url(self, video_page_url):
+    # Get video URL & subtitles
+    def get_video_url_and_subtitles(self, video_page_url):
         # Get HTML page...
         if not re.match('^https?:', self.video_page_url):
             video_page_url = "%s%s" % (utils.url_root, video_page_url)
@@ -82,12 +85,39 @@ class Main:
         beautiful_soup = BeautifulSoup(html_data, soup_strainer)
 
         video_url = None
-        li_entries = beautiful_soup.findAll("option")
+	    subtitle_urls = []
+	    divs = beautiful_soup.findAll("div")
+	    li_video_entries = divs[1].findAll("li")
+
+	    if len(divs) > 1:
+	        profile = xbmcaddon.Addon().getAddonInfo('profile')
+	        tempdir = xbmc.translatePath(os.path.join(profile, "temp/subtiles"))
+	        if not os.path.isdir(tempdir):
+		        os.makedirs(tempdir)
+	        else:
+		        for file in os.listdir(tempdir):
+    			    filename = os.path.join(tempdir, file)
+    			    if os.path.isfile(filename):
+			            os.unlink(filename)
+
+	        for li_entry in divs[2].findAll("li"):
+	    	    li_entry_a = li_entry.find("a")
+	    	    if li_entry_a is not None:
+			        subtitle_url = li_entry_a["href"]
+			        subtitle_name = li_entry_a["download"].split("_").pop()
+			        data = http_request.get(subtitle_url)
+			        subtitle_url = os.path.join(tempdir, subtitle_name)
+	        	    f = open(subtitle_url, 'w')
+                    f.write(data)
+                    f.close()
+			        subtitle_urls.append(subtitle_url)
+
         for quality in self.video_formats:
-            for li_entry in li_entries:
-                li_entry_a = li_entry.string.strip()
+            for li_entry in li_video_entries:
+                li_entry_a = li_entry.find("a")
                 if li_entry_a is not None:
-                    if li_entry_a == quality:
-                        video_url = li_entry["value"]
-                        return video_url
-        return video_url
+                    if li_entry_a.string.strip() == quality:
+                        video_url = li_entry_a["href"]
+                        return video_url, subtitle_urls
+
+        return video_url, subtitle_urls
