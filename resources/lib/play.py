@@ -87,20 +87,20 @@ class Main:
         divs = beautiful_soup.findAll("div")
         li_video_entries = divs[1].findAll("li")
 
-        if len(divs) > 1:
+        if len(divs) > 2:
             profile = xbmcaddon.Addon().getAddonInfo('profile')
             tempdir = xbmc.translatePath(os.path.join(profile, "temp/subtiles"))
             if not os.path.isdir(tempdir):
                 os.makedirs(tempdir)
             else:
-                for file in os.listdir(tempdir):
-                    filename = os.path.join(tempdir, file)
+                for temp_file in os.listdir(tempdir):
+                    filename = os.path.join(tempdir, temp_file)
                     if os.path.isfile(filename):
                         os.unlink(filename)
 
             for li_entry in divs[2].findAll("li"):
                 li_entry_a = li_entry.find("a")
-                if li_entry_a is not None:
+                if li_entry_a is not None and li_entry_a["download"] is not None:
                     subtitle_url = li_entry_a["href"]
                     subtitle_name = li_entry_a["download"].split("_").pop()
                     data = http_request.get(subtitle_url)
