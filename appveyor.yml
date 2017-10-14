@@ -22,8 +22,8 @@ before_deploy:
 - ps: .\.appveyor\appveyor.before-deployment.ps1
 deploy:
 - provider: GitHub
-  tag: $(CI_BUILD_VERSION)
-  release: $(CI_BUILD_VERSION)
+  tag: $(APPVEYOR_PROJECT_NAME)-v$(CI_BUILD_VERSION)
+  release: $(APPVEYOR_PROJECT_NAME)-v$(CI_BUILD_VERSION)
   auth_token:
     secure: UEgy2H9zJKLi599QoO3qVf5BKFqloRQ246ez9cEgsfV3vooAUfVopMS9+IjRtArL
   artifact: Zip
@@ -31,21 +31,21 @@ deploy:
     branch: master
     CI_DEPLOY_GITHUB: True
 - provider: GitHub
-  tag: $(CI_BUILD_VERSION)-prerelease
-  release: $(CI_BUILD_VERSION)-prerelease
+  tag: $(APPVEYOR_PROJECT_NAME)-v$(CI_BUILD_VERSION)-prerelease
+  release: $(APPVEYOR_PROJECT_NAME)-v$(CI_BUILD_VERSION)-prerelease
   auth_token:
     secure: UEgy2H9zJKLi599QoO3qVf5BKFqloRQ246ez9cEgsfV3vooAUfVopMS9+IjRtArL
   artifact: Zip
   prerelease: true
   on:
     branch: develop
-    CI_DEPLOY_GITHUB_PRE: True
+    CI_DEPLOY_GITHUB: True
 after_deploy:
 - ps: .\.appveyor\appveyor.after-deployment.ps1
 notifications:
 - provider: Slack
   auth_token:
-    secure: dEyWFeGEKdMmajrfGAYOGhWPEpivj1DiWu1xbbngPVcDW8vucg7JvWtJWTdARJ2bLedEg009P1o0JupLLx69Fg==
+    secure: dEyWFeGEKdMmajrfGAYOGrXJBwq9H8M7llX5BVEwBIYa6rSe4SL5I4Ho5DTl4tgm18qSPmk+daLfC1GVgs0SRd+WrRXn6uMKDoyeV4rzr+c=
   channel: notifications
   on_build_success: true
   on_build_failure: true
